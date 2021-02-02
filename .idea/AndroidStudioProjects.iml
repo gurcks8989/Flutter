@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/chatting/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/chatting/build" />
+      <excludeFolder url="file://$MODULE_DIR$/layout/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/layout/build" />
+      <excludeFolder url="file://$MODULE_DIR$/managing_state/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/managing_state/build" />
+      <excludeFolder url="file://$MODULE_DIR$/mdc_100_series/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/mdc_100_series/build" />
+      <excludeFolder url="file://$MODULE_DIR$/t1/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/t1/build" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
