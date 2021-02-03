@@ -107,6 +107,15 @@ class SplashScreen extends StatelessWidget {
 
 // ignore: must_be_immutable
 class LoginPage extends StatelessWidget {
+  final _IDController = TextEditingController();
+  final _PWController = TextEditingController();
+
+  @override
+  void dispose() {
+    _IDController.dispose();
+    _PWController.dispose();
+  }
+
   Widget imageSection = Container(
     padding: EdgeInsets.only(top: 40),
     child: Column(
@@ -144,19 +153,39 @@ class LoginPage extends StatelessWidget {
       child: Container(
         child: Column(
           children: [
-            Text('ID'),
             TextFormField(
-              onChanged: (text) {
-                print("First text field: $text");
-              },
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'ID',
+              ),
+              //controller: _IDController,
             ),
+            Padding(padding: const EdgeInsets.only(bottom:10),),
             TextFormField(
-                //controller: myController,
-                ),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Password',
+              ),
+              //controller: _PWController,
+            ),
           ],
         ),
       ),
     ),
+  );
+
+  //Log IN button
+  Widget loginButtomSection = RaisedButton(
+    padding: const EdgeInsets.only(
+      left: 100,
+      right: 100,
+    ),
+    child: Text('    Log IN    ', style: TextStyle(fontSize: 18)),
+    onPressed: () {
+      pushText('Login');
+    },
+    textColor: Colors.white,
+    color: Colors.black,
   );
 
   @override
@@ -164,21 +193,24 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             imageSection,
             textSection,
+            textFieldSection,
+            loginButtomSection,
             //logo
-            //login
             SizedBox(height: 20),
-            Container(),
-
             //sign up
             Container(
               alignment: Alignment(0.8, 0.0),
-              child: FlatButton(
-                child: Text('Sign Up', style: TextStyle(fontSize: 15)),
+              child: RaisedButton(
+                child: Text(
+                  'Sign Up',
+                  style: TextStyle(fontSize: 15),
+                ),
                 onPressed: () {
+                  pushText('SignUp');
                   // 눌렀을 때 두 번째 route로 이동합니다.
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => SignUpPage()));
@@ -187,40 +219,43 @@ class LoginPage extends StatelessWidget {
               ),
             ),
 
-            //Log IN button
-            Container(
-              child: RaisedButton(
-                child: Text('                    Log IN                    ',
-                    style: TextStyle(fontSize: 18)),
-                onPressed: pushText('Login'),
-                textColor: Colors.white,
-                color: Colors.black,
-              ),
-            ),
-
             //another login
             Container(
               child: Column(
                 children: <Widget>[
                   RaisedButton(
-                    child: Text('                  카카오로 로그인                  ',
-                        style: TextStyle(fontSize: 15)),
-                    onPressed: pushText('kakao'),
+                    padding: const EdgeInsets.only(
+                      left: 100,
+                      right: 100,
+                    ),
+                    child: Text('카카오로 로그인', style: TextStyle(fontSize: 15)),
+                    onPressed: () {
+                      pushText('kakao');
+                    },
                     textColor: Colors.black,
                     color: Colors.yellow,
                   ),
                   RaisedButton(
-                    child: Text('                   네이버로 로그인                 ',
-                        style: TextStyle(fontSize: 15)),
-                    onPressed: pushText('naver'),
+                    padding: const EdgeInsets.only(
+                      left: 100,
+                      right: 100,
+                    ),
+                    child: Text('네이버로 로그인', style: TextStyle(fontSize: 15)),
+                    onPressed: () {
+                      pushText('naver');
+                    },
                     textColor: Colors.white,
                     color: Colors.green,
                   ),
                   RaisedButton(
-                    child: Text(
-                        '                    구글로 로그인                    ',
-                        style: TextStyle(fontSize: 15)),
-                    onPressed: pushText('google'),
+                    padding: const EdgeInsets.only(
+                      left: 100,
+                      right: 100,
+                    ),
+                    child: Text('  구글로 로그인 ', style: TextStyle(fontSize: 15)),
+                    onPressed: () {
+                      pushText('naver');
+                    },
                     textColor: Colors.black,
                     color: Colors.white,
                   ),
@@ -235,6 +270,6 @@ class LoginPage extends StatelessWidget {
   }
 
   static pushText(String s) {
-    print('push' + s);
+    print('push ' + s);
   }
 }
