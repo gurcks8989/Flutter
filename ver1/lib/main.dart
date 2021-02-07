@@ -147,20 +147,31 @@ class LoginPage extends StatelessWidget {
   //final _formKey = GlobalKey<FormState>();
 
   Widget textFieldSection = Container(
-    width: 400,
-    child: Form(
-      //key: _formKey,
-      child: Container(
-        child: Column(
-          children: [
+    width: 300,
+    //child: Form(
+    //key: _formKey,
+    child: Table(
+      columnWidths: {
+        0: FlexColumnWidth(1),
+        1: FlexColumnWidth(5),
+      },
+      //defaultColumnWidth: FixedColumnWidth(120.0),
+      border: TableBorder.all(style: BorderStyle.none, color: Colors.black, width: 1),
+      children: [
+        TableRow(children: [
+          Column(children: [Text('ID', style: TextStyle(fontSize: 20.0))]),
+          Column(children: [
             TextFormField(
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'ID',
               ),
-              //controller: _IDController,
             ),
-            Padding(padding: const EdgeInsets.only(bottom:10),),
+          ]),
+        ]),
+        TableRow(children: [
+          Column(children: [Text('PW', style: TextStyle(fontSize: 20.0))]),
+          Column(children: [
             TextFormField(
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
@@ -168,10 +179,12 @@ class LoginPage extends StatelessWidget {
               ),
               //controller: _PWController,
             ),
-          ],
-        ),
-      ),
+          ]),
+        ]),
+      ],
     ),
+
+    //),
   );
 
   //Log IN button
