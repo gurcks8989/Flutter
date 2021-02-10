@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'SignUpPage.dart';
+import 'UserInterface.dart';
 
 void main() => runApp(MyApp());
 
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
         builder: (context, snapshot) {
           print(snapshot);
           if (snapshot.connectionState == ConnectionState.done) {
-            return LoginPage(); //LoginPage();
+            return UserInterface(); //LoginPage();
           } else {
             return SplashScreen();
           }
@@ -156,7 +157,8 @@ class LoginPage extends StatelessWidget {
         1: FlexColumnWidth(5),
       },
       //defaultColumnWidth: FixedColumnWidth(120.0),
-      border: TableBorder.all(style: BorderStyle.none, color: Colors.black, width: 1),
+      border: TableBorder.all(
+          style: BorderStyle.none, color: Colors.black, width: 1),
       children: [
         TableRow(children: [
           Column(children: [Text('ID', style: TextStyle(fontSize: 20.0))]),
@@ -281,8 +283,140 @@ class LoginPage extends StatelessWidget {
       ),
     );
   }
+}
 
-  static pushText(String s) {
-    print('push ' + s);
+void pushText(String s) {
+  print('push ' + s);
+}
+
+final buttonSize = 30.0;
+
+Widget mainMenu = Container(
+  //padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
+  child: Row(
+      mainAxisSize: MainAxisSize.max, //가로로 꽉 채우기
+      mainAxisAlignment: MainAxisAlignment.spaceBetween, //가로 방향으로 가운데 정렬하기
+      crossAxisAlignment: CrossAxisAlignment.center, //세로 방향으로 가운데 정렬하기
+      children: [
+        FlatButton(
+          child: Icon(
+            Icons.home_filled,
+            size: buttonSize,
+          ),
+          onPressed: () {
+            //
+          },
+        ),
+        FlatButton(
+          child: Icon(
+            Icons.search, //search /  image_search
+            size: buttonSize,
+          ),
+          onPressed: () {
+            //
+          },
+        ),
+        FlatButton(
+          child: Icon(
+            Icons.add_box_outlined,
+            size: buttonSize,
+          ),
+          onPressed: () {
+            //
+          },
+        ),
+        FlatButton(
+          child: Icon(
+            Icons.photo_rounded, //insert_photo_rounded //photo_rounded
+            size: buttonSize,
+          ),
+          onPressed: () {
+            //
+          },
+        ),
+        FlatButton(
+          child: Icon(
+            Icons.person,
+            size: buttonSize,
+          ),
+          onPressed: () {
+            //
+          },
+        ),
+      ],
+    ),
+);
+
+class Home extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _HomeState();
+  }
+}
+class _HomeState extends State<Home> {
+  int _currentIndex = 0;
+  final List<Widget> _children = [
+    PlaceholderWidget(Colors.white),
+    PlaceholderWidget(Colors.deepOrange),
+    PlaceholderWidget(Colors.green),
+    PlaceholderWidget(Colors.orange),
+    PlaceholderWidget(Colors.deepPurple),
+  ];
+  onTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('My Flutter App'),
+      ),
+      body: _children[_currentIndex], // new
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.black12,
+        selectedItemColor: Colors.amber[800],
+        iconSize: 40,
+        onTap: onTapped, // new
+        currentIndex: _currentIndex, // new
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_filled, color: Colors.black,),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search, color: Colors.black,),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_box_outlined, color: Colors.black,),
+            label: 'Add',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.photo_rounded, color: Colors.black,),
+            label: 'Gallery',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person, color: Colors.black,),
+            label: 'User',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class PlaceholderWidget extends StatelessWidget {
+  final Color color;
+
+  PlaceholderWidget(this.color);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: color,
+    );
   }
 }
