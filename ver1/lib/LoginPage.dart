@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'SignUpPage.dart';
+import 'package:flutter/widgets.dart';
 import 'main.dart';
 
 class LoginPage extends StatelessWidget {
@@ -43,65 +43,107 @@ class LoginPage extends StatelessWidget {
   //final _formKey = GlobalKey<FormState>();
 
   Widget textFieldSection = Container(
-    width: 300,
+    width: common.getWidth() * 0.7,
+    height: common.getHeight() / 5,
     //child: Form(
     //key: _formKey,,
-    child: Table(
-      columnWidths: {
-        0: FlexColumnWidth(1),
-        1: FlexColumnWidth(5),
-      },
-      //defaultColumnWidth: FixedColumnWidth(120.0),
-      border: TableBorder.all(
-        style: BorderStyle.none,
+    child: Card(
+      color: Colors.white70,
+      shape: RoundedRectangleBorder(
+        side: BorderSide(color: Colors.black),
+        borderRadius: BorderRadius.circular(16.0),
       ),
-      // color: Colors.black, width: 1),
-      children: [
-        TableRow(
+      child: Center(
+        child: Table(
+          columnWidths: {
+            0: FlexColumnWidth(2),
+            1: FlexColumnWidth(8),
+            2: FlexColumnWidth(0.5),
+          },
+          //defaultColumnWidth: FixedColumnWidth(120.0),
+          border: TableBorder.all(style: BorderStyle.none),
           children: [
-            Padding(
-              padding:
-                  EdgeInsets.symmetric(vertical: common.getSize().height / 40),
-              child: Text(
-                'ID',
-                style: TextStyle(
-                  fontSize: 20.0,
-                ),
-              ),
-            ),
-            Padding(
-              padding:
-                  EdgeInsets.symmetric(vertical: 10),
-              child: TextFormField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  //hintText: 'ID',
-                ),
-              ),
-            ),
-          ],
-        ),
-        TableRow(
-          children: [
-            Column(
+            TableRow(
               children: [
-                SizedBox(height: common.getSize().height / 40),
-                Text('PW', style: TextStyle(fontSize: 20.0)),
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(vertical: common.getHeight() / 50),
+                  child: Text(
+                    'ID',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ),
+                Container(
+                  color: Colors.white,
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: common.getWidth() / 2,
+                          vertical: common.getHeight() / 60),
+                      border: OutlineInputBorder(),
+                      //hintText: 'ID',
+                    ),
+                  ),
+                ),
+                Container(),
               ],
             ),
-            TextFormField(
-              obscureText: true, // 문자 입력시 '*'로 보임,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                //hintText: 'Password',
-              ),
-              //controller: _PWController,
+            TableRow(
+              children: [
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(vertical: common.getHeight() / 150),
+                ),
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(vertical: common.getHeight() / 150),
+                ),
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(vertical: common.getHeight() / 150),
+                ),
+              ],
+            ),
+            TableRow(
+              children: [
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(vertical: common.getHeight() / 50),
+                  child: Text('PW',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 20.0)),
+                ),
+                Container(
+                  color: Colors.white,
+                  child: TextFormField(
+                    obscureText: true, // 문자 입력시 '*'로 보임,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: common.getWidth() / 2,
+                          vertical: common.getHeight() / 60),
+                      border: OutlineInputBorder(),
+                      //hintText: 'Password',
+                    ),
+                    //controller: _PWController,
+                  ),
+                ),
+                Container(),
+              ],
             ),
           ],
         ),
-      ],
+      ),
     ),
   );
+
+  Widget blueLine = Expanded(
+      child: Container(
+    color: Colors.indigoAccent,
+    height: 1,
+  ));
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +155,46 @@ class LoginPage extends StatelessWidget {
             children: <Widget>[
               imageSection,
               textSection,
+              SizedBox(height: common.getHeight() / 30),
               textFieldSection,
+              //sign up
+              Container(
+                width: common.getWidth() * 0.7,
+                child: Row(
+                  children: [
+                    blueLine,
+                    FlatButton(
+                      child: Text(
+                        'forgive Password?',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                      onPressed: () {
+                        print('push SignUp button');
+                        // 눌렀을 때 두 번째 route로 이동합니다.
+                        Navigator.pushNamed(context, "/SignUp");
+                      },
+                      textColor: Colors.indigoAccent,
+                    ),
+                    blueLine,
+                    FlatButton(
+                      child: Text(
+                        'Sign Up',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                      onPressed: () {
+                        print('push SignUp button');
+                        // 눌렀을 때 두 번째 route로 이동합니다.
+                        Navigator.pushNamed(context, "/SignUp");
+                      },
+                      textColor: Colors.indigoAccent,
+                    ),
+                    blueLine,
+                  ],
+                ),
+              ),
+
+              SizedBox(height: common.getHeight() / 150),
+
               RaisedButton(
                 padding: const EdgeInsets.only(
                   left: 100,
@@ -127,25 +208,9 @@ class LoginPage extends StatelessWidget {
                 textColor: Colors.white,
                 color: Colors.black,
               ),
-              //logo
-              SizedBox(height: 20),
-              //sign up
-              Container(
-                alignment: Alignment(0.8, 0.0),
-                child: RaisedButton(
-                  child: Text(
-                    'Sign Up',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  onPressed: () {
-                    print('push SignUp button');
-                    // 눌렀을 때 두 번째 route로 이동합니다.
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => SignUpPage()));
-                  },
-                  textColor: Colors.black,
-                ),
-              ),
+
+
+              SizedBox(height: common.getHeight() / 30),
 
               //another login
               Container(
@@ -187,7 +252,6 @@ class LoginPage extends StatelessWidget {
                       textColor: Colors.black,
                       color: Colors.white,
                     ),
-                    SizedBox(height: 50),
                   ],
                 ),
               ),

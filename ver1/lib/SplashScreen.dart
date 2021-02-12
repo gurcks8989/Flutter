@@ -69,7 +69,7 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     common.setSize(MediaQuery.of(context).size);
-    print('Width of the screen: ${common.getSize().width}');
+    print('Width of the screen: ${common.getWidth()}');
     print('current address ' + common.getAddress());
     return MaterialApp(
       home: Scaffold(

@@ -1,25 +1,35 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import 'SplashScreen.dart';
 import 'LoginPage.dart';
+import 'SignUpPage.dart';
 import 'UserInterface.dart';
 
 class CommonThings {
-  static Size _size;
-  String _address;
+  static double _width ;
+  static double _height ;
+  static String _address;
 
   CommonThings() {
-    _size = null;
+    _width = 0 ;
+    _height = 0 ;
     _address = '/login';
   }
 
   void setSize(Size size) {
-    _size = size;
+    _width = size.width;
+    _height = size.height;
   }
 
-  Size getSize() {
-    return _size;
+  double getWidth() {
+    return _width;
+  }
+
+  double getHeight() {
+    return _height;
   }
 
   void setAddress(String currentAddress) {
@@ -57,19 +67,15 @@ class MyApp extends StatelessWidget {
         ),
       );
     } else {
-      if (common.getAddress() == null) {
-        _isLoading = true;
-        return MyApp();
-      } else {
-        return MaterialApp(
-          initialRoute: common.getAddress(),
-          routes: <String, WidgetBuilder>{
-            //"/": (context) => MyApp(),
-            "/login": (context) => LoginPage(),
-            "/main": (context) => MainPage(),
-          },
-        );
-      }
+      return MaterialApp(
+        initialRoute: common.getAddress(),
+        routes: {
+          //"/": (context) => MyApp(),
+          "/login": (context) => LoginPage(),
+          "/main": (context) => MainPage(),
+          "/SignUp": (context) => SignUpPage(),
+        },
+      );
     }
   }
 }
