@@ -9,74 +9,70 @@ class CommonThings {
   static Size _size;
   String _address;
 
-  CommonThings(){
+  CommonThings() {
     _size = null;
-    _address = '/' ;
+    _address = '/login';
   }
 
-  void setSize(Size size){
-    _size = size ;
+  void setSize(Size size) {
+    _size = size;
   }
 
-  Size getSize(){
-    return _size ;
+  Size getSize() {
+    return _size;
   }
 
-  void setAddress(String currentAddress){
-    _address = currentAddress ;
+  void setAddress(String currentAddress) {
+    _address = currentAddress;
   }
 
-  String getAddress(){
-    return _address ;
+  String getAddress() {
+    return _address;
   }
 }
 
 void main() => runApp(MyApp());
 
-CommonThings common = new CommonThings() ;
+CommonThings common = new CommonThings();
+bool _isLoading = true;
 
 class MyApp extends StatelessWidget {
   final Future _initFuture = Init.initialize();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: FutureBuilder(
-        future: _initFuture,
-        builder: (context, snapshot) {
-          print(snapshot);
-          if (snapshot.connectionState != ConnectionState.done) {
-            return SplashScreen();
-          }
-          else{
-            common.setAddress("/login");
-            print('set address') ;
-            return address() ;
-          }
-        },
-      ),
-    );
+    if (_isLoading) {
+      _isLoading = false;
+      return MaterialApp(
+        home: FutureBuilder(
+          future: _initFuture,
+          builder: (context, snapshot) {
+            print(snapshot);
+            if (snapshot.connectionState != ConnectionState.done) {
+              return SplashScreen();
+            } else {
+              return MyApp();
+            }
+          },
+        ),
+      );
+    } else {
+      if (common.getAddress() == null) {
+        _isLoading = true;
+        return MyApp();
+      } else {
+        return MaterialApp(
+          initialRoute: common.getAddress(),
+          routes: <String, WidgetBuilder>{
+            //"/": (context) => MyApp(),
+            "/login": (context) => LoginPage(),
+            "/main": (context) => MainPage(),
+          },
+        );
+      }
+    }
   }
 }
-
-// ignore: camel_case_types
-class address extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    common.setSize(MediaQuery.of(context).size);
-    print('Width of the screen: ${common.getSize().width}');
-    print('current address ' + common.getAddress());
-    return MaterialApp(
-      initialRoute: common.getAddress(),
-      routes: <String, WidgetBuilder>{
-        "/": (context) => MyApp(),
-        "/login": (context) => LoginPage(),
-        "/main": (context) => MainPage(),
-      },
-    );
-  }
-}
-
 
 void pushText(String s) {
   print('push ' + s);

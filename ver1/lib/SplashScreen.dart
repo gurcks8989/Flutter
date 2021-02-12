@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'main.dart';
 
 class Init {
   static Future initialize() async {
@@ -67,6 +68,9 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    common.setSize(MediaQuery.of(context).size);
+    print('Width of the screen: ${common.getSize().width}');
+    print('current address ' + common.getAddress());
     return MaterialApp(
       home: Scaffold(
         body: Center(

@@ -45,7 +45,7 @@ class LoginPage extends StatelessWidget {
   Widget textFieldSection = Container(
     width: 300,
     //child: Form(
-    //key: _formKey,
+    //key: _formKey,,
     child: Table(
       columnWidths: {
         0: FlexColumnWidth(1),
@@ -53,125 +53,146 @@ class LoginPage extends StatelessWidget {
       },
       //defaultColumnWidth: FixedColumnWidth(120.0),
       border: TableBorder.all(
-          style: BorderStyle.none, color: Colors.black, width: 1),
+        style: BorderStyle.none,
+      ),
+      // color: Colors.black, width: 1),
       children: [
-        TableRow(children: [
-          Column(children: [Text('ID', style: TextStyle(fontSize: 20.0))]),
-          Column(children: [
-            TextFormField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'ID',
+        TableRow(
+          children: [
+            Padding(
+              padding:
+                  EdgeInsets.symmetric(vertical: common.getSize().height / 40),
+              child: Text(
+                'ID',
+                style: TextStyle(
+                  fontSize: 20.0,
+                ),
               ),
             ),
-          ]),
-        ]),
-        TableRow(children: [
-          Column(children: [Text('PW', style: TextStyle(fontSize: 20.0))]),
-          Column(children: [
+            Padding(
+              padding:
+                  EdgeInsets.symmetric(vertical: 10),
+              child: TextFormField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  //hintText: 'ID',
+                ),
+              ),
+            ),
+          ],
+        ),
+        TableRow(
+          children: [
+            Column(
+              children: [
+                SizedBox(height: common.getSize().height / 40),
+                Text('PW', style: TextStyle(fontSize: 20.0)),
+              ],
+            ),
             TextFormField(
+              obscureText: true, // 문자 입력시 '*'로 보임,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                hintText: 'Password',
+                //hintText: 'Password',
               ),
               //controller: _PWController,
             ),
-          ]),
-        ]),
+          ],
+        ),
       ],
     ),
-
-    //),
   );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Column(
-          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            imageSection,
-            textSection,
-            textFieldSection,
-            RaisedButton(
-              padding: const EdgeInsets.only(
-                left: 100,
-                right: 100,
-              ),
-              child: Text('    Log IN    ', style: TextStyle(fontSize: 18)),
-              onPressed: () {
-                print('push Login button');
-                Navigator.pushNamed(context, "/main");
-              },
-              textColor: Colors.white,
-              color: Colors.black,
-            ),
-            //logo
-            SizedBox(height: 20),
-            //sign up
-            Container(
-              alignment: Alignment(0.8, 0.0),
-              child: RaisedButton(
-                child: Text(
-                  'Sign Up',
-                  style: TextStyle(fontSize: 15),
+        child: SingleChildScrollView(
+          child: Column(
+            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              imageSection,
+              textSection,
+              textFieldSection,
+              RaisedButton(
+                padding: const EdgeInsets.only(
+                  left: 100,
+                  right: 100,
                 ),
+                child: Text('    Log IN    ', style: TextStyle(fontSize: 18)),
                 onPressed: () {
-                  print('push SignUp button');
-                  // 눌렀을 때 두 번째 route로 이동합니다.
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SignUpPage()));
+                  print('push Login button');
+                  Navigator.pushNamed(context, "/main");
                 },
-                textColor: Colors.black,
+                textColor: Colors.white,
+                color: Colors.black,
               ),
-            ),
+              //logo
+              SizedBox(height: 20),
+              //sign up
+              Container(
+                alignment: Alignment(0.8, 0.0),
+                child: RaisedButton(
+                  child: Text(
+                    'Sign Up',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  onPressed: () {
+                    print('push SignUp button');
+                    // 눌렀을 때 두 번째 route로 이동합니다.
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SignUpPage()));
+                  },
+                  textColor: Colors.black,
+                ),
+              ),
 
-            //another login
-            Container(
-              child: Column(
-                children: <Widget>[
-                  RaisedButton(
-                    padding: const EdgeInsets.only(
-                      left: 100,
-                      right: 100,
+              //another login
+              Container(
+                child: Column(
+                  children: <Widget>[
+                    RaisedButton(
+                      padding: const EdgeInsets.only(
+                        left: 100,
+                        right: 100,
+                      ),
+                      child: Text('카카오로 로그인', style: TextStyle(fontSize: 15)),
+                      onPressed: () {
+                        print('push kakao button');
+                      },
+                      textColor: Colors.black,
+                      color: Colors.yellow,
                     ),
-                    child: Text('카카오로 로그인', style: TextStyle(fontSize: 15)),
-                    onPressed: () {
-                      print('push kakao button');
-                    },
-                    textColor: Colors.black,
-                    color: Colors.yellow,
-                  ),
-                  RaisedButton(
-                    padding: const EdgeInsets.only(
-                      left: 100,
-                      right: 100,
+                    RaisedButton(
+                      padding: const EdgeInsets.only(
+                        left: 100,
+                        right: 100,
+                      ),
+                      child: Text('네이버로 로그인', style: TextStyle(fontSize: 15)),
+                      onPressed: () {
+                        print('push naver button');
+                      },
+                      textColor: Colors.white,
+                      color: Colors.green,
                     ),
-                    child: Text('네이버로 로그인', style: TextStyle(fontSize: 15)),
-                    onPressed: () {
-                      print('push naver button');
-                    },
-                    textColor: Colors.white,
-                    color: Colors.green,
-                  ),
-                  RaisedButton(
-                    padding: const EdgeInsets.only(
-                      left: 100,
-                      right: 100,
+                    RaisedButton(
+                      padding: const EdgeInsets.only(
+                        left: 100,
+                        right: 100,
+                      ),
+                      child: Text('  구글로 로그인 ', style: TextStyle(fontSize: 15)),
+                      onPressed: () {
+                        print('push google button');
+                      },
+                      textColor: Colors.black,
+                      color: Colors.white,
                     ),
-                    child: Text('  구글로 로그인 ', style: TextStyle(fontSize: 15)),
-                    onPressed: () {
-                      print('push google button');
-                    },
-                    textColor: Colors.black,
-                    color: Colors.white,
-                  ),
-                  SizedBox(height: 50),
-                ],
+                    SizedBox(height: 50),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
