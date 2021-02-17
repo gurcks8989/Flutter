@@ -16,4 +16,4 @@ For help getting started with Flutter, view our
 samples, guidance on mobile development, and a full API reference.
 
 
-<img src="/GIF/02/17">
+<img src="ver1/GIF/02:17.gif" witdh="100%">
