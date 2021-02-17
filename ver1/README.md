@@ -19,4 +19,4 @@ samples, guidance on mobile development, and a full API reference.
 gif
 
 
-![gif](ver1/GIF/02:17.gif)
+![gif](/GIF/02:17.gif)
