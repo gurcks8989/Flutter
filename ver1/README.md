@@ -19,4 +19,6 @@ samples, guidance on mobile development, and a full API reference.
 
 ## Project
 
-<img src="GIF/02:17.gif" width="30%" style="display:block; margin: auto;">
+#update
+02/17 - menu bar connect UserInterface
+<img src="GIF/02:17.gif" width="30%" style="display:block; margin: 0 auto;">
