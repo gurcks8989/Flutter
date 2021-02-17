@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'main.dart';
 
 class UserInterface extends StatelessWidget {
   final listFont = TextStyle(
@@ -16,7 +15,7 @@ class UserInterface extends StatelessWidget {
         color: Colors.black38,
         iconSize: 40.0,
         onPressed: () {
-          pushText('Setting');
+          print('push Setting');
         },
       ),
     );
@@ -47,7 +46,7 @@ class UserInterface extends StatelessWidget {
               ],
             ),
             onPressed: () {
-              pushText('MyPosting');
+              print('push MyPosting');
             },
           ),
           Container(width: 1, height: 80, color: Colors.black),
@@ -67,7 +66,7 @@ class UserInterface extends StatelessWidget {
               ],
             ),
             onPressed: () {
-              pushText('manner_tamp');
+              print('push manner_tamp');
               showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -104,7 +103,7 @@ class UserInterface extends StatelessWidget {
               ],
             ),
             onPressed: () {
-              pushText('recommend');
+              print('push recommend');
             },
           ),
         ],
@@ -277,7 +276,7 @@ class modifiedUser extends StatelessWidget {
             ),
             child: Text(' 회원정보 수정 ', style: TextStyle(fontSize: 18)),
             onPressed: () {
-              pushText('modified');
+              print('push modified');
               //todo
             },
             textColor: Colors.white,
