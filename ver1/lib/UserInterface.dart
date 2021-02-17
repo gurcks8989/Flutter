@@ -199,7 +199,6 @@ class UserInterface extends StatelessWidget {
                 //           );
               },
             ),
-            mainMenu,
           ],
         ),
       ),

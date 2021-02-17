@@ -18,8 +18,8 @@ class LoginPage extends StatelessWidget {
       children: [
         Image.asset(
           'images/icon.jpeg',
-          width: 100,
-          height: 80,
+          width: common.getWidth()/4,
+          //height: 80,
           fit: BoxFit.scaleDown,
         ),
       ],
@@ -169,9 +169,10 @@ class LoginPage extends StatelessWidget {
                         style: TextStyle(fontSize: 15),
                       ),
                       onPressed: () {
-                        print('push SignUp button');
+                        print('push Forgive button');
+                        common.setAddress("/signUp");
                         // 눌렀을 때 두 번째 route로 이동합니다.
-                        Navigator.pushNamed(context, "/SignUp");
+                        Navigator.pushNamed(context, "/signUp");
                       },
                       textColor: Colors.indigoAccent,
                     ),
@@ -183,8 +184,8 @@ class LoginPage extends StatelessWidget {
                       ),
                       onPressed: () {
                         print('push SignUp button');
-                        // 눌렀을 때 두 번째 route로 이동합니다.
-                        Navigator.pushNamed(context, "/SignUp");
+                        common.setAddress("/signUp");
+                        Navigator.pushNamed(context, "/signUp");
                       },
                       textColor: Colors.indigoAccent,
                     ),
@@ -203,6 +204,7 @@ class LoginPage extends StatelessWidget {
                 child: Text('    Log IN    ', style: TextStyle(fontSize: 18)),
                 onPressed: () {
                   print('push Login button');
+                  common.setAddress("/main");
                   Navigator.pushNamed(context, "/main");
                 },
                 textColor: Colors.white,

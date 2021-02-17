@@ -23,6 +23,8 @@ class Init {
 
 // ignore: must_be_immutable
 class SplashScreen extends StatelessWidget {
+  final Future _initFuture = Init.initialize();
+
   Widget imageSection = Container(
     padding: EdgeInsets.only(top: 150),
     child: Column(
@@ -66,11 +68,31 @@ class SplashScreen extends StatelessWidget {
     ),
   );
 
+  Widget chargingSection = Container(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        CircularProgressIndicator(
+          value: 100,
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.black12),
+        ),
+      ],
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
+
+    void showRelevant() async {
+      await Future.delayed(Duration(seconds: 1));
+      Navigator.pushReplacementNamed(context, common.getAddress()); //  '/login'
+    }
+
     common.setSize(MediaQuery.of(context).size);
     print('Width of the screen: ${common.getWidth()}');
     print('current address ' + common.getAddress());
+
     return MaterialApp(
       home: Scaffold(
         body: Center(
@@ -78,7 +100,20 @@ class SplashScreen extends StatelessWidget {
             children: [
               imageSection,
               textSection,
-              loadSection,
+              FutureBuilder(
+                future: _initFuture,
+                builder: (context, snapshot) {
+                  print(snapshot);
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    return loadSection;
+                  }
+                  else {
+                    common.setAddress("/login");
+                    showRelevant();
+                    return chargingSection;
+                  }
+                },
+              ),
             ],
           ),
         ),
