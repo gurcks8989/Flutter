@@ -19,4 +19,4 @@ samples, guidance on mobile development, and a full API reference.
 
 ## Project
 
-![gif](GIF/02:17.gif){: width="200"}
+![gif](GIF/02:17.gif){: width="200px"}
