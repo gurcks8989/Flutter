@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'Map.dart';
+import 'Search.dart';
+import 'Add.dart';
+import 'Gallery.dart';
 import 'UserInterface.dart';
 import 'main.dart';
 
@@ -12,80 +17,51 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _currentIndex = 0;
   final List<Widget> _children = [
-    PlaceholderWidget(Colors.white),
-    PlaceholderWidget(Colors.deepOrange),
-    PlaceholderWidget(Colors.green),
-    PlaceholderWidget(Colors.orange),
-    UserInterface(),
+    Map(),
+    Search(),
+    Add(),
+    Gallery(),
+    UserInterface()
   ];
-
-  onTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _children[_currentIndex], // new
+      body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black12,
-        selectedItemColor: Colors.amber[800],
-        iconSize: 40,
-        onTap: onTapped, // new
+        type: BottomNavigationBarType.fixed,
+        unselectedItemColor: Colors.black,
+        selectedItemColor: Colors.black,
+        iconSize: common.getWidth() / 10,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
         currentIndex: _currentIndex, // new
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home_filled,
-              color: Colors.black,
-            ),
+            icon: Icon(Icons.home_filled),
             title: Text('', style: TextStyle(fontSize: 0)),
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.search,
-              color: Colors.black,
-            ),
+            icon: Icon(Icons.search),
             title: Text('', style: TextStyle(fontSize: 0)),
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.add_box_outlined,
-              color: Colors.black,
-            ),
+            icon: Icon(Icons.add_box_outlined),
             title: Text('', style: TextStyle(fontSize: 0)),
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.photo_rounded,
-              color: Colors.black,
-            ),
+            icon: Icon(Icons.photo_rounded),
             title: Text('', style: TextStyle(fontSize: 0)),
           ),
           BottomNavigationBarItem(
-            icon: Icon(
-              Icons.person,
-              color: Colors.black,
-            ),
+            icon: Icon(Icons.person),
             title: Text('', style: TextStyle(fontSize: 0)),
           ),
         ],
       ),
-    );
-  }
-}
-
-class PlaceholderWidget extends StatelessWidget {
-  final Color color;
-
-  PlaceholderWidget(this.color);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: color,
     );
   }
 }

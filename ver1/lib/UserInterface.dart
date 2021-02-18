@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'main.dart';
 
 class UserInterface extends StatelessWidget {
   final listFont = TextStyle(
@@ -25,10 +26,11 @@ class UserInterface extends StatelessWidget {
       color: Colors.black12,
       child: Row(
         mainAxisSize: MainAxisSize.max, //가로로 꽉 채우기
-        mainAxisAlignment: MainAxisAlignment.spaceAround, //가로 방향으로 가운데 정렬하기
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly, //가로 방향으로 가운데 정렬하기
         crossAxisAlignment: CrossAxisAlignment.center, //세로 방향으로 가운데 정렬하기
         children: [
           FlatButton(
+            minWidth: common.getWidth() / 4,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -52,6 +54,7 @@ class UserInterface extends StatelessWidget {
           Container(width: 1, height: 80, color: Colors.black),
           //),
           FlatButton(
+            minWidth: common.getWidth() / 4,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -86,6 +89,7 @@ class UserInterface extends StatelessWidget {
           ),
           Container(width: 1, height: 80, color: Colors.black),
           FlatButton(
+            minWidth: common.getWidth() / 4,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -233,35 +237,59 @@ class modifiedUser extends StatelessWidget {
               '사진 수정',
               style: TextStyle(color: Colors.blue),
             ),
-            onPressed: () {},
+            onPressed: () {
+              //TODO
+            },
           ),
           Container(
             width: 300,
             child: Table(
               columnWidths: {
                 0: FlexColumnWidth(1),
-                1: FlexColumnWidth(5),
+                1: FlexColumnWidth(4),
               },
               //defaultColumnWidth: FixedColumnWidth(120.0),
               border: TableBorder.all(style: BorderStyle.none),
               children: [
                 TableRow(children: [
-                  Text('이메일',
+                  Padding(
+                    padding:
+                        EdgeInsets.only(top: common.getHeight() / 40),
+                    child: Text(
+                      '이메일',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
-                          fontSize: 15.0, fontWeight: FontWeight.bold)),
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                   TextFormField(
                     decoration: InputDecoration(
-                      hintText: 'Email',
+                      contentPadding: EdgeInsets.only(
+                        bottom: common.getHeight() / 40,
+                      ),
                     ),
                   ),
                 ]),
                 TableRow(children: [
-                  Text('닉네임',
+                  Padding(
+                    padding:
+                        EdgeInsets.only(top: common.getHeight() / 40),
+                    child: Text(
+                      '닉네임',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
-                          fontSize: 15.0, fontWeight: FontWeight.bold)),
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                   TextFormField(
                     decoration: InputDecoration(
-                      hintText: 'Nickname',
+                      contentPadding: EdgeInsets.only(
+                        bottom: common.getHeight() / 40,
+                      ),
                     ),
                   ),
                 ]),
