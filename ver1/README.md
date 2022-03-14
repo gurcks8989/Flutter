@@ -23,4 +23,4 @@ samples, guidance on mobile development, and a full API reference.
 02/17 - menu bar connect UserInterface
 
 <hr>
-<img src="GIF/02:17.gif" width="30%" style="display:block; margin: 0 auto;">
+<img src="GIF/02_17.gif" width="30%" style="display:block; margin: 0 auto;">
