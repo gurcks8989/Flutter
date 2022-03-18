@@ -1,4 +1,4 @@
-# Mobile app development.
+## Mobile app development.
 
 A new Flutter application.
 
