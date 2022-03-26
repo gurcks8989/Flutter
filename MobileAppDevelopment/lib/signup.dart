@@ -40,8 +40,6 @@ class _SignUpPageState extends State<SignUpPage> {
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             children: <Widget>[
               const SizedBox(height: 10.0),
-              // TODO: Wrap Username with AccentColorOverride (103)
-              // TODO: Remove filled: true values (103)
               TextFormField(
                 validator: (userName){
                   if (userName == null || userName.isEmpty) { return 'Please enter UserName' ; }
@@ -55,7 +53,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               ),
               const SizedBox(height: 12.0),
-              // TODO: Wrap Password with AccentColorOverride (103)
               TextFormField(
                 validator: (password){
                   if (password == null || password.isEmpty) { return 'Please enter Password' ; }
@@ -69,7 +66,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 obscureText: true,
               ),
               const SizedBox(height: 12.0),
-              // TODO: Wrap Password with AccentColorOverride (103)
               TextFormField(
                 validator: (password){
                   if (password == null || password.isEmpty) { return 'Please enter Password' ; }
@@ -83,7 +79,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 obscureText: true,
               ),
               const SizedBox(height: 12.0),
-              // TODO: Wrap Password with AccentColorOverride (103)
               TextFormField(
                 validator: (email){
                   if (email == null || email.isEmpty) { return 'Please enter Email Address' ; }
@@ -97,8 +92,6 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               ButtonBar(
                 children: <Widget>[
-                  // TODO: Add an elevation to NEXT (103)
-                  // TODO: Add a beveled rectangular border to NEXT (103)
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       primary: Colors.grey[350],
@@ -123,5 +116,3 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 }
-
-// TODO: Add AccentColorOverride (103)
