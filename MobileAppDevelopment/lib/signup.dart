@@ -28,7 +28,10 @@ class _SignUpPageState extends State<SignUpPage> {
   final _emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  final alphanumeric = RegExp(r'^[a-zA-Z0-9]+$');
+  final alphanumeric = RegExp(r'^[a-zA-Z]');
+  final  validNumbers = RegExp(r'(\d+)');
+  final  validAlphabet = RegExp(r'[a-zA-Z]');
+  final  validSpecial = RegExp(r'^[a-zA-Z0-9 ]+$');
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +46,7 @@ class _SignUpPageState extends State<SignUpPage> {
               TextFormField(
                 validator: (userName){
                   if (userName == null || userName.isEmpty) { return 'Please enter UserName' ; }
-                  else if (!RegExp("^([0-9]*[a-zA-Z]){3,}").hasMatch(userName)) { return 'Username is invalid' ; }
+                  else if (!RegExp("[0-9]{3,}[a-zA-Z]{3,}").hasMatch(userName)) { return 'Username is invalid' ; }
                   return null;
                 },
                 controller: _usernameController,
