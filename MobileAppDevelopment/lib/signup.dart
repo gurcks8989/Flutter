@@ -28,11 +28,6 @@ class _SignUpPageState extends State<SignUpPage> {
   final _emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  final alphanumeric = RegExp(r'^[a-zA-Z]');
-  final  validNumbers = RegExp(r'(\d+)');
-  final  validAlphabet = RegExp(r'[a-zA-Z]');
-  final  validSpecial = RegExp(r'^[a-zA-Z0-9 ]+$');
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +41,21 @@ class _SignUpPageState extends State<SignUpPage> {
               TextFormField(
                 validator: (userName){
                   if (userName == null || userName.isEmpty) { return 'Please enter UserName' ; }
-                  else if (!RegExp("[0-9]{3,}[a-zA-Z]{3,}").hasMatch(userName)) { return 'Username is invalid' ; }
+                  else if (RegExp("[0-9][a-zA-Z]|[a-zA-Z][0-9]|[0-9].[a-zA-Z]|[a-zA-Z].[0-9]").hasMatch(userName)) {
+                    // Exist digit & alphabet
+                    var digitCnt = 0, alphaCnt = 0 ;
+                    for(int i = 0 ; i < userName.length ; i++){
+                      if(isDigit(userName.codeUnitAt(i)))
+                        digitCnt += 1 ;
+                      if(isLetter(userName.codeUnitAt(i)))
+                        alphaCnt += 1 ;
+                    }
+                    if(digitCnt < 3 || alphaCnt < 3)
+                      return 'Username is invalid' ;
+                    return null ;
+                  }
+                  else
+                    return 'Username is invalid' ;
                   return null;
                 },
                 controller: _usernameController,
@@ -72,6 +81,7 @@ class _SignUpPageState extends State<SignUpPage> {
               TextFormField(
                 validator: (password){
                   if (password == null || password.isEmpty) { return 'Please enter Password' ; }
+                  else if(password != _passwordController.text){ return 'Confirm Password doesnʼt match Password' ; }
                   return null;
                 },
                 controller: _passwordConfirmController,
@@ -119,3 +129,8 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 }
+
+bool isDigit(int rune) => rune ^ 0x30 <= 9;
+
+bool isLetter(int codeUnit) =>
+    (codeUnit >= 65 && codeUnit <= 90) || (codeUnit >= 97 && codeUnit <= 122);

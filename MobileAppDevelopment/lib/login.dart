@@ -34,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           children: <Widget>[
-            const SizedBox(height: 80.0),
+            const SizedBox(height: 120.0),
             Column(
               children: <Widget>[
                 Image.asset('assets/diamond.png'),

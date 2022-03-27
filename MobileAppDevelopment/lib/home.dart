@@ -15,22 +15,29 @@
 import 'package:MobileAppDevelopment/login.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'model/products_repository.dart';
 import 'model/product.dart';
 
-class HomePage extends StatelessWidget {
+const handongUrl = 'https://www.handong.edu/';
+
+
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
-  // TODO: Add a variable for Category (104)
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final isSelected = <bool>[false, true];
 
   List<Card> _buildGridCards(BuildContext context) {
     List<Product> products = ProductsRepository.loadProducts(Category.all);
-
     if (products.isEmpty) {
       return const <Card>[];
     }
-
     final ThemeData theme = Theme.of(context);
     final NumberFormat formatter = NumberFormat.simpleCurrency(
         locale: Localizations.localeOf(context).toString());
@@ -80,6 +87,62 @@ class HomePage extends StatelessWidget {
     }).toList();
   }
 
+
+  List<Card> _buildListCards(BuildContext context) {
+    List<Product> products = ProductsRepository.loadProducts(Category.all);
+    if (products.isEmpty) {
+      return const <Card>[];
+    }
+
+    final ThemeData theme = Theme.of(context);
+    final NumberFormat formatter = NumberFormat.simpleCurrency(
+        locale: Localizations.localeOf(context).toString());
+
+    return products.map((product) {
+      return Card(
+        clipBehavior: Clip.antiAlias,
+        // TODO: Adjust card heights (103)
+        child: Row(
+          // TODO: Center items on the card (103)
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            AspectRatio(
+              aspectRatio: 18 / 20,
+              child: Image.asset(
+                product.assetName,
+                package: product.assetPackage,
+                fit: BoxFit.fitWidth,
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
+                child: Column(
+                  // TODO: Align labels to the bottom and center (103)
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  // TODO: Change innermost Column (103)
+                  children: <Widget>[
+                    // TODO: Handle overflowing labels (103)
+                    Text(
+                      product.name,
+                      style: theme.textTheme.headline6,
+                      maxLines: 1,
+                    ),
+                    const SizedBox(height: 8.0),
+                    Text(
+                      formatter.format(product.price),
+                      style: theme.textTheme.subtitle2,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: Return an AsymmetricView (104)
@@ -87,7 +150,8 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SHRINE'),
+        centerTitle: true,
+        title: const Text('Main'),
         actions: <Widget>[
           IconButton(
             icon: const Icon(
@@ -95,17 +159,19 @@ class HomePage extends StatelessWidget {
               semanticLabel: 'search',
             ),
             onPressed: () {
-              print('Search button');
+              Navigator.push(
+                context,
+                // TODO search page
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+              );
             },
           ),
-          IconButton(
-            icon: const Icon(
-              Icons.tune,
-              semanticLabel: 'filter',
+          const IconButton(
+            icon: Icon(
+              Icons.language,
+              semanticLabel: 'language',
             ),
-            onPressed: () {
-              print('Filter button');
-            },
+            onPressed: _launchURL,
           ),
         ],
       ),
@@ -124,9 +190,10 @@ class HomePage extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
-              padding: EdgeInsets.only(top: 100.0, left: 30),
+              padding: EdgeInsets.only(top: 110.0, left: 40),
             ),
             ListTile(
+              contentPadding: const EdgeInsets.only(left: 40),
               leading: GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 child: const Icon(Icons.home,
@@ -139,6 +206,7 @@ class HomePage extends StatelessWidget {
               },
             ),
             ListTile(
+              contentPadding: const EdgeInsets.only(left: 40),
               leading: GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 child: const Icon(Icons.search,
@@ -151,6 +219,7 @@ class HomePage extends StatelessWidget {
               },
             ),
             ListTile(
+              contentPadding: const EdgeInsets.only(left: 40),
               leading: GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 child: const Icon(Icons.location_city,
@@ -163,6 +232,7 @@ class HomePage extends StatelessWidget {
               },
             ),
             ListTile(
+              contentPadding: const EdgeInsets.only(left: 40),
               leading: GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 child: const Icon(Icons.person,
@@ -175,6 +245,7 @@ class HomePage extends StatelessWidget {
               },
             ),
             ListTile(
+              contentPadding: const EdgeInsets.only(left: 40),
               leading: GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 child: const Icon(Icons.logout,
@@ -194,14 +265,64 @@ class HomePage extends StatelessWidget {
         ),
       ),
       body: Center(
-        child: GridView.count(
-          crossAxisCount: 2,
-          padding: const EdgeInsets.all(16.0),
-          childAspectRatio: 8.0 / 9.0,
-          children: _buildGridCards(context),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              alignment: Alignment.centerRight,
+              child: ToggleButtons(
+                color: Colors.black.withOpacity(0.60),
+                selectedColor: const Color(0xFF6200EE),
+                selectedBorderColor: const Color(0xFF6200EE),
+                fillColor: const Color(0xFF6200EE).withOpacity(0.08),
+                splashColor: const Color(0xFF6200EE).withOpacity(0.12),
+                hoverColor: const Color(0xFF6200EE).withOpacity(0.04),
+                borderRadius: BorderRadius.circular(4.0),
+                isSelected: isSelected,
+                onPressed: (index) {
+                  setState(() {
+                    if(isSelected[index==1 ? 0 : 1]){
+                      isSelected[index==1 ? 0 : 1] = false ;
+                      isSelected[index] = true ;
+                    }
+                    print(isSelected[1]) ;
+                  }
+                  );
+                },
+                children: const [
+                  Icon(Icons.list),
+                  Icon(Icons.grid_view),
+                ],
+              ),
+            ),
+            Expanded(
+              child: isSelected[1] ?
+              OrientationBuilder(
+                builder: (context, orientation) {
+                  return GridView.count(
+                    // Create a grid with 2 columns in portrait mode, or 3 columns in
+                    // landscape mode.
+                    crossAxisCount: orientation == Orientation.portrait ? 2 : 3,
+                    // Generate 100 widgets that display their index in the List.
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    childAspectRatio: 8.0 / 9.0,
+                    children: _buildGridCards(context),
+                  );
+                },
+              )
+              : ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                children: _buildListCards(context),
+              ),
+            ),
+          ],
         ),
       ),
       resizeToAvoidBottomInset: false,
     );
   }
+}
+
+void _launchURL() async {
+  if (!await launch(handongUrl)) throw 'Could not launch $handongUrl';
 }
