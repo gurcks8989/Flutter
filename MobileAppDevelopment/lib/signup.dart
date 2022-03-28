@@ -113,9 +113,6 @@ class _SignUpPageState extends State<SignUpPage> {
                     child: const Text('SIGN UP'),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Processing Data')),
-                        );
                         Navigator.of(context).pop();
                       }
                     },

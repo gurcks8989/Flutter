@@ -13,7 +13,9 @@
 // limitations under the License.
 
 import 'package:MobileAppDevelopment/login.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -44,6 +46,11 @@ class _HomePageState extends State<HomePage> {
 
     return products.map((product) {
       return Card(
+        margin: const EdgeInsets.symmetric(vertical: 12.0,horizontal: 8.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0)
+        ),
+        elevation: 4.0,
         clipBehavior: Clip.antiAlias,
         // TODO: Adjust card heights (103)
         child: Column(
@@ -59,26 +66,67 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
-                child: Column(
-                  // TODO: Align labels to the bottom and center (103)
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  // TODO: Change innermost Column (103)
-                  children: <Widget>[
-                    // TODO: Handle overflowing labels (103)
-                    Text(
-                      product.name,
-                      style: theme.textTheme.headline6,
-                      maxLines: 1,
+              child: Row(
+                children: [
+                  const SizedBox(width: 6),
+                  const Icon(
+                    Icons.location_on,
+                    color: Colors.lightBlue,
+                    size: 18,
+                  ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const SizedBox(height: 6),
+                        Row(
+                          children: const [
+                            Icon(
+                              Icons.star,
+                              color: Colors.yellow,
+                              size: 13,
+                            ),
+                            Icon(
+                              Icons.star,
+                              color: Colors.yellow,
+                              size: 13,
+                            ),
+                            Icon(
+                              Icons.star,
+                              color: Colors.yellow,
+                              size: 13,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 3.0),
+                        Text(
+                          product.name,
+                          style: theme.textTheme.subtitle2,
+                          maxLines: 1,
+                        ),
+                        const SizedBox(height: 8.0),
+                        Text(
+                          formatter.format(product.price),
+                          style: theme.textTheme.bodySmall,
+                        ),
+                        Container(
+                          alignment: Alignment.bottomRight,
+                          width: 130,
+                          child: TextButton(
+                            child: const Text('more'),
+                            style: TextButton.styleFrom(
+                              minimumSize: Size.zero, // Set this
+                              padding: EdgeInsets.zero, // and this
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            onPressed: () {},
+                          ),
+                        )
+                      ],
                     ),
-                    const SizedBox(height: 8.0),
-                    Text(
-                      formatter.format(product.price),
-                      style: theme.textTheme.subtitle2,
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -100,39 +148,84 @@ class _HomePageState extends State<HomePage> {
 
     return products.map((product) {
       return Card(
+        margin: const EdgeInsets.all(8.0),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            side: const BorderSide(width: 0.5, color: Colors.grey),
+        ),
+        elevation: 4.0,
         clipBehavior: Clip.antiAlias,
-        // TODO: Adjust card heights (103)
         child: Row(
-          // TODO: Center items on the card (103)
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            AspectRatio(
-              aspectRatio: 18 / 20,
-              child: Image.asset(
-                product.assetName,
-                package: product.assetPackage,
-                fit: BoxFit.fitWidth,
+            const SizedBox(width: 12.0),
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 12.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              width: 100,
+              height: 100,
+              alignment: Alignment.centerLeft,
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: Image.asset(
+                    product.assetName,
+                    package: product.assetPackage,
+                    fit: BoxFit.fill
+                ),
               ),
             ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
                 child: Column(
-                  // TODO: Align labels to the bottom and center (103)
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  // TODO: Change innermost Column (103)
                   children: <Widget>[
-                    // TODO: Handle overflowing labels (103)
+                    const SizedBox(height: 6),
+                    Row(
+                      children: const [
+                        Icon(
+                          Icons.star,
+                          color: Colors.yellow,
+                          size: 15,
+                        ),
+                        Icon(
+                          Icons.star,
+                          color: Colors.yellow,
+                          size: 15,
+                        ),
+                        Icon(
+                          Icons.star,
+                          color: Colors.yellow,
+                          size: 15,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 3.0),
                     Text(
                       product.name,
-                      style: theme.textTheme.headline6,
+                      style: theme.textTheme.subtitle2,
                       maxLines: 1,
                     ),
                     const SizedBox(height: 8.0),
                     Text(
                       formatter.format(product.price),
-                      style: theme.textTheme.subtitle2,
+                      style: theme.textTheme.bodySmall,
                     ),
+                    Container(
+                      alignment: Alignment.bottomRight,
+                      width: 300,
+                      child: TextButton(
+                        child: const Text('more'),
+                        style: TextButton.styleFrom(
+                          minimumSize: Size.zero, // Set this
+                          padding: EdgeInsets.zero, // and this
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        onPressed: () {},
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -188,7 +281,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Colors.lightBlue,
               ),
               padding: EdgeInsets.only(top: 110.0, left: 40),
             ),
@@ -197,7 +290,7 @@ class _HomePageState extends State<HomePage> {
               leading: GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 child: const Icon(Icons.home,
-                  color: Colors.blue,
+                  color: Colors.lightBlue,
                 ),
               ),
               title: Text('Home'),
@@ -210,7 +303,7 @@ class _HomePageState extends State<HomePage> {
               leading: GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 child: const Icon(Icons.search,
-                  color: Colors.blue,
+                  color: Colors.lightBlue,
                 ),
               ),
               title: Text('Search'),
@@ -223,7 +316,7 @@ class _HomePageState extends State<HomePage> {
               leading: GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 child: const Icon(Icons.location_city,
-                  color: Colors.blue,
+                  color: Colors.lightBlue,
                 ),
               ),
               title: Text('Favorite Hotel'),
@@ -236,7 +329,7 @@ class _HomePageState extends State<HomePage> {
               leading: GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 child: const Icon(Icons.person,
-                  color: Colors.blue,
+                  color: Colors.lightBlue,
                 ),
               ),
               title: Text('My page'),
@@ -249,7 +342,7 @@ class _HomePageState extends State<HomePage> {
               leading: GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 child: const Icon(Icons.logout,
-                  color: Colors.blue,
+                  color: Colors.lightBlue,
                 ),
               ),
               title: Text('Log Out'),
@@ -272,11 +365,11 @@ class _HomePageState extends State<HomePage> {
               alignment: Alignment.centerRight,
               child: ToggleButtons(
                 color: Colors.black.withOpacity(0.60),
-                selectedColor: const Color(0xFF6200EE),
-                selectedBorderColor: const Color(0xFF6200EE),
-                fillColor: const Color(0xFF6200EE).withOpacity(0.08),
-                splashColor: const Color(0xFF6200EE).withOpacity(0.12),
-                hoverColor: const Color(0xFF6200EE).withOpacity(0.04),
+                selectedColor: Colors.lightBlue,
+                selectedBorderColor: Colors.lightBlue,
+                fillColor: Colors.lightBlue.withOpacity(0.08),
+                splashColor: Colors.lightBlue.withOpacity(0.12),
+                hoverColor: Colors.lightBlue.withOpacity(0.04),
                 borderRadius: BorderRadius.circular(4.0),
                 isSelected: isSelected,
                 onPressed: (index) {
@@ -285,7 +378,6 @@ class _HomePageState extends State<HomePage> {
                       isSelected[index==1 ? 0 : 1] = false ;
                       isSelected[index] = true ;
                     }
-                    print(isSelected[1]) ;
                   }
                   );
                 },
@@ -296,22 +388,22 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Expanded(
-              child: isSelected[1] ?
-              OrientationBuilder(
+              child: isSelected[1]
+              ? OrientationBuilder(
                 builder: (context, orientation) {
                   return GridView.count(
                     // Create a grid with 2 columns in portrait mode, or 3 columns in
                     // landscape mode.
                     crossAxisCount: orientation == Orientation.portrait ? 2 : 3,
                     // Generate 100 widgets that display their index in the List.
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
                     childAspectRatio: 8.0 / 9.0,
                     children: _buildGridCards(context),
                   );
                 },
               )
               : ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
                 children: _buildListCards(context),
               ),
             ),
