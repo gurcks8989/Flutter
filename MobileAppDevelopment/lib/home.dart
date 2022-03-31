@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:MobileAppDevelopment/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -21,6 +20,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'model/products_repository.dart';
 import 'model/product.dart';
+import 'detail.dart';
+import 'login.dart';
 
 const handongUrl = 'https://www.handong.edu/';
 
@@ -34,6 +35,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final isSelected = <bool>[false, true];
+
 
   List<Card> _buildGridCards(BuildContext context) {
     List<Product> products = ProductsRepository.loadProducts(Category.all);
@@ -76,7 +78,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                   const SizedBox(width: 6),
                   Expanded(
-                    child: Column(
+                    child:
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         const SizedBox(height: 6),
@@ -112,7 +115,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         Container(
                           alignment: Alignment.bottomRight,
-                          width: 130,
+                          width: 300,
                           child: TextButton(
                             child: const Text('more'),
                             style: TextButton.styleFrom(
@@ -120,12 +123,19 @@ class _HomePageState extends State<HomePage> {
                               padding: EdgeInsets.zero, // and this
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                // TODO search page
+                                MaterialPageRoute(builder: (context) => const DetailPage()),
+                              );
+                            },
                           ),
                         )
                       ],
                     ),
                   ),
+                  const SizedBox(width: 6),
                 ],
               ),
             ),
@@ -223,7 +233,13 @@ class _HomePageState extends State<HomePage> {
                           padding: EdgeInsets.zero, // and this
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            // TODO search page
+                            MaterialPageRoute(builder: (context) => const DetailPage()),
+                          );
+                        },
                       ),
                     )
                   ],
@@ -240,7 +256,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     // TODO: Return an AsymmetricView (104)
     // TODO: Pass Category variable to AsymmetricView (104)
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,

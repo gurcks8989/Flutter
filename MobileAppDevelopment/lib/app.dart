@@ -17,12 +17,14 @@ import 'package:flutter/material.dart';
 import 'home.dart';
 import 'login.dart';
 import 'signup.dart';
+import 'detail.dart';
 
 const routeHome = '/';
 const routeLogin = '/login';
 const routeSignUp = '/signup/';
 const routeMenu = '/menu';
 const routeSearch = '/search/';
+const routeDetail = '/detail/';
 const routeFavorite = '/favorite';
 const routeMyPage = '/mypage/';
 
@@ -58,6 +60,8 @@ class ShrineApp extends StatelessWidget {
       page = const LoginPage();
     } else if (settings.name == routeSignUp) {
       page = const SignUpPage();
+    } else if (settings.name == routeDetail) {
+      page = const DetailPage();
     } else {
       throw Exception('Unknown route: ${settings.name}');
     }
