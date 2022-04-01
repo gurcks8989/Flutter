@@ -61,7 +61,20 @@ class ShrineApp extends StatelessWidget {
     } else if (settings.name == routeSignUp) {
       page = const SignUpPage();
     } else if (settings.name == routeDetail) {
+      final ScreenArguments args = settings.arguments;
+
+      // Then, extract the required data from the arguments and
+      // pass the data to the correct screen.
+      return MaterialPageRoute(
+          builder: (context) {
+            return PassArgumentsScreen(
+              title: args.title,
+              message: args.message,
+            );
+          },
       page = const DetailPage();
+    } else if (settings.name == routeSearch) {
+    page = const DetailPage();
     } else {
       throw Exception('Unknown route: ${settings.name}');
     }

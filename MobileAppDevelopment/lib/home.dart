@@ -20,8 +20,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'model/products_repository.dart';
 import 'model/product.dart';
-import 'detail.dart';
-import 'login.dart';
+import 'app.dart';
 
 const handongUrl = 'https://www.handong.edu/';
 
@@ -124,11 +123,7 @@ class _HomePageState extends State<HomePage> {
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                // TODO search page
-                                MaterialPageRoute(builder: (context) => const DetailPage()),
-                              );
+                              Navigator.pushNamed(context, routeDetail);
                             },
                           ),
                         )
@@ -234,11 +229,7 @@ class _HomePageState extends State<HomePage> {
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            // TODO search page
-                            MaterialPageRoute(builder: (context) => const DetailPage()),
-                          );
+                          Navigator.pushNamed(context, routeDetail);
                         },
                       ),
                     )
@@ -267,11 +258,8 @@ class _HomePageState extends State<HomePage> {
               semanticLabel: 'search',
             ),
             onPressed: () {
-              Navigator.push(
-                context,
-                // TODO search page
-                MaterialPageRoute(builder: (context) => const LoginPage()),
-              );
+              // TODO search
+              Navigator.pushNamed(context, routeSearch);
             },
           ),
           const IconButton(
@@ -363,10 +351,7 @@ class _HomePageState extends State<HomePage> {
               title: Text('Log Out'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginPage()),
-                );
+                Navigator.pushNamed(context, routeLogin);
               },
             ),
           ],

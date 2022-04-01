@@ -41,20 +41,7 @@ class _DetailPageState extends State<DetailPage> {
         title: const Text('Detail'),
       ),
       body: Center(
-            child:Expanded(
-              child: OrientationBuilder(
-                builder: (context, orientation) {
-                  return GridView.count(
-                    // Create a grid with 2 columns in portrait mode, or 3 columns in
-                    // landscape mode.
-                    crossAxisCount: orientation == Orientation.portrait ? 2 : 3,
-                    // Generate 100 widgets that display their index in the List.
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                    childAspectRatio: 8.0 / 9.0,
-                  );
-                },
-              )
-            ),
+        child: null,
       ),
       resizeToAvoidBottomInset: false,
     );
