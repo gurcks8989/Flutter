@@ -12,26 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-enum Category { all, accessories, clothing, home, }
-
-class Product {
-  const Product({
-    required this.category,
+class Hotel {
+  const Hotel({
     required this.id,
     required this.isFeatured,
+    required this.star,
     required this.name,
-    required this.price,
+    required this.address,
+    required this.phone,
+    required this.content,
   });
 
-  final Category category;
   final int id;
   final bool isFeatured;
+  final int star ;
   final String name;
-  final int price;
-
-  String get assetName => '$id-0.jpg';
-  String get assetPackage => 'shrine_images';
-
-  @override
-  String toString() => "$name (id=$id)";
+  final String address;
+  final String phone;
+  final String content;
 }

@@ -19,14 +19,14 @@ import 'login.dart';
 import 'signup.dart';
 import 'detail.dart';
 
-const routeHome = '/';
+const routeHome = '/home';
+const routeMain = '/main';
 const routeLogin = '/login';
-const routeSignUp = '/signup/';
-const routeMenu = '/menu';
-const routeSearch = '/search/';
-const routeDetail = '/detail/';
+const routeSignUp = '/signup';
+const routeSearch = '/search';
+const routeDetail = '/detail';
 const routeFavorite = '/favorite';
-const routeMyPage = '/mypage/';
+const routeMyPage = '/mypage';
 
 // TODO: Convert ShrineApp to stateful widget (104)
 class ShrineApp extends StatelessWidget {
@@ -54,31 +54,41 @@ class ShrineApp extends StatelessWidget {
 
   Route<dynamic>? _getRoute(RouteSettings settings) {
     late Widget page;
-    if (settings.name == routeHome) {
-      page = const HomePage();
-    } else if (settings.name == routeLogin) {
-      page = const LoginPage();
-    } else if (settings.name == routeSignUp) {
-      page = const SignUpPage();
-    } else if (settings.name == routeDetail) {
-      final ScreenArguments args = settings.arguments;
-
-      // Then, extract the required data from the arguments and
-      // pass the data to the correct screen.
-      return MaterialPageRoute(
-          builder: (context) {
-            return PassArgumentsScreen(
-              title: args.title,
-              message: args.message,
-            );
-          },
-      page = const DetailPage();
-    } else if (settings.name == routeSearch) {
-    page = const DetailPage();
-    } else {
-      throw Exception('Unknown route: ${settings.name}');
+    switch(settings.name){
+      case routeMain:
+        return MaterialPageRoute(builder: (_) => const HomePage());
+      case routeLogin:
+        return MaterialPageRoute(builder: (_) => const LoginPage());
+      case routeSignUp:
+        return MaterialPageRoute(builder: (_) => const SignUpPage());
+      case routeDetail:
+        // final ScreenArguments args = settings.arguments;
+        //
+        // // Then, extract the required data from the arguments and
+        // // pass the data to the correct screen.
+        // return MaterialPageRoute(
+        //     builder: (context) {
+        //       return PassArgumentsScreen(
+        //         title: args.title,
+        //         message: args.message,
+        //       );
+        //     },
+        return MaterialPageRoute(builder: (_) => const DetailPage());
+      case routeHome:
+        return MaterialPageRoute(builder: (_) => const DetailPage());
+      case routeSearch:
+        return MaterialPageRoute(builder: (_) => const DetailPage());
+      case routeFavorite:
+        return MaterialPageRoute(builder: (_) => const DetailPage());
+      case routeMyPage:
+        return MaterialPageRoute(builder: (_) => const DetailPage());
+      default :
+        return MaterialPageRoute(
+          builder: (_) => Scaffold(
+            body: Center(
+              child: Text('No route defined for ${settings.name}')),
+        ));
     }
-
     return MaterialPageRoute<void>(
       settings: settings,
       builder: (BuildContext context) => const LoginPage(),

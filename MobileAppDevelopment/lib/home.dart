@@ -18,8 +18,8 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'model/products_repository.dart';
-import 'model/product.dart';
+import 'model/hotels_repository.dart';
+import 'model/hotel.dart';
 import 'app.dart';
 
 const handongUrl = 'https://www.handong.edu/';
@@ -35,17 +35,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final isSelected = <bool>[false, true];
 
-
   List<Card> _buildGridCards(BuildContext context) {
-    List<Product> products = ProductsRepository.loadProducts(Category.all);
-    if (products.isEmpty) {
+    List<Hotel> hotels = HotelsRepository.loadHotels();
+    if (hotels.isEmpty) {
       return const <Card>[];
     }
     final ThemeData theme = Theme.of(context);
     final NumberFormat formatter = NumberFormat.simpleCurrency(
         locale: Localizations.localeOf(context).toString());
 
-    return products.map((product) {
+    return hotels.map((hotel) {
       return Card(
         margin: const EdgeInsets.symmetric(vertical: 12.0,horizontal: 8.0),
         shape: RoundedRectangleBorder(
@@ -59,81 +58,64 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             AspectRatio(
-              aspectRatio: 18 / 11,
+              aspectRatio: 15 / 11,
               child: Image.asset(
-                product.assetName,
-                package: product.assetPackage,
-                fit: BoxFit.fitWidth,
+                'assets/hotels-${hotel.id}.jpg',
+                fit: BoxFit.fill,
               ),
+            ),
+            const SizedBox(height: 6),
+            Row(
+              children: const [
+                SizedBox(width: 25.0),
+                Icon(Icons.star, color: Colors.yellow, size: 13),
+                Icon(Icons.star, color: Colors.yellow, size: 13),
+                Icon(Icons.star, color: Colors.yellow, size: 13),
+              ],
+            ),
+            Row(
+              children: [
+                const SizedBox(width: 25.0),
+                Text(
+                  hotel.name,
+                  style: theme.textTheme.titleSmall,
+                  maxLines: 1,
+                ),
+              ],
             ),
             Expanded(
               child: Row(
                 children: [
-                  const SizedBox(width: 6),
-                  const Icon(
-                    Icons.location_on,
-                    color: Colors.lightBlue,
-                    size: 18,
+                  const SizedBox(width: 5.0),
+                  const Icon(Icons.location_on, color: Colors.blue, size: 15),
+                  const SizedBox(width: 5.0),
+                  Text(
+                    hotel.address,
+                    style: const TextStyle(fontSize: 8),
                   ),
-                  const SizedBox(width: 6),
-                  Expanded(
-                    child:
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        const SizedBox(height: 6),
-                        Row(
-                          children: const [
-                            Icon(
-                              Icons.star,
-                              color: Colors.yellow,
-                              size: 13,
-                            ),
-                            Icon(
-                              Icons.star,
-                              color: Colors.yellow,
-                              size: 13,
-                            ),
-                            Icon(
-                              Icons.star,
-                              color: Colors.yellow,
-                              size: 13,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 3.0),
-                        Text(
-                          product.name,
-                          style: theme.textTheme.subtitle2,
-                          maxLines: 1,
-                        ),
-                        const SizedBox(height: 8.0),
-                        Text(
-                          formatter.format(product.price),
-                          style: theme.textTheme.bodySmall,
-                        ),
-                        Container(
-                          alignment: Alignment.bottomRight,
-                          width: 300,
-                          child: TextButton(
-                            child: const Text('more'),
-                            style: TextButton.styleFrom(
-                              minimumSize: Size.zero, // Set this
-                              padding: EdgeInsets.zero, // and this
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            ),
-                            onPressed: () {
-                              Navigator.pushNamed(context, routeDetail);
-                            },
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 6),
                 ],
               ),
             ),
+            Container(
+              alignment: Alignment.bottomRight,
+              width: 300,
+              child: TextButton(
+                child: const Text('more'),
+                style: TextButton.styleFrom(
+                  minimumSize: Size.zero, // Set this
+                  padding: EdgeInsets.zero, // and this
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    routeDetail,
+                    // TODO insert argument
+                    arguments: null,
+                  );
+                },
+              ),
+            )
           ],
         ),
       );
@@ -142,8 +124,8 @@ class _HomePageState extends State<HomePage> {
 
 
   List<Card> _buildListCards(BuildContext context) {
-    List<Product> products = ProductsRepository.loadProducts(Category.all);
-    if (products.isEmpty) {
+    List<Hotel> hotels = HotelsRepository.loadHotels();
+    if (hotels.isEmpty) {
       return const <Card>[];
     }
 
@@ -151,7 +133,7 @@ class _HomePageState extends State<HomePage> {
     final NumberFormat formatter = NumberFormat.simpleCurrency(
         locale: Localizations.localeOf(context).toString());
 
-    return products.map((product) {
+    return hotels.map((hotel) {
       return Card(
         margin: const EdgeInsets.all(8.0),
         shape: RoundedRectangleBorder(
@@ -175,9 +157,8 @@ class _HomePageState extends State<HomePage> {
               child: AspectRatio(
                 aspectRatio: 1,
                 child: Image.asset(
-                    product.assetName,
-                    package: product.assetPackage,
-                    fit: BoxFit.fill
+                 'assets/hotels-${hotel.id}.jpg',
+                  fit: BoxFit.fill
                 ),
               ),
             ),
@@ -209,13 +190,13 @@ class _HomePageState extends State<HomePage> {
                     ),
                     const SizedBox(height: 3.0),
                     Text(
-                      product.name,
+                      hotel.name,
                       style: theme.textTheme.subtitle2,
                       maxLines: 1,
                     ),
                     const SizedBox(height: 8.0),
                     Text(
-                      formatter.format(product.price),
+                      hotel.address,
                       style: theme.textTheme.bodySmall,
                     ),
                     Container(
@@ -299,6 +280,7 @@ class _HomePageState extends State<HomePage> {
               title: Text('Home'),
               onTap: () {
                 Navigator.pop(context);
+                Navigator.pushNamed(context, routeHome);
               },
             ),
             ListTile(
@@ -312,6 +294,7 @@ class _HomePageState extends State<HomePage> {
               title: Text('Search'),
               onTap: () {
                 Navigator.pop(context);
+                Navigator.pushNamed(context, routeSearch);
               },
             ),
             ListTile(
@@ -325,6 +308,7 @@ class _HomePageState extends State<HomePage> {
               title: Text('Favorite Hotel'),
               onTap: () {
                 Navigator.pop(context);
+                Navigator.pushNamed(context, routeFavorite);
               },
             ),
             ListTile(
@@ -338,6 +322,7 @@ class _HomePageState extends State<HomePage> {
               title: Text('My page'),
               onTap: () {
                 Navigator.pop(context);
+                Navigator.pushNamed(context, routeMyPage);
               },
             ),
             ListTile(
@@ -417,4 +402,11 @@ class _HomePageState extends State<HomePage> {
 
 void _launchURL() async {
   if (!await launch(handongUrl)) throw 'Could not launch $handongUrl';
+}
+
+class ScreenArguments {
+  final String title;
+  final String message;
+
+  ScreenArguments(this.title, this.message);
 }
