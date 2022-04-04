@@ -77,7 +77,7 @@ class HotelsRepository {
           id: 4,
           isFeatured: false,
           star: 1,
-          name: '포항 아쿠아베이글램핑펜션',
+          name: '아쿠아베이글램핑펜션',
           address: '경북 포항시 남구 운하로 207-21',
           phone: '054-1644-1346',
           content:

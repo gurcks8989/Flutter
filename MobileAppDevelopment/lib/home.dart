@@ -46,19 +46,16 @@ class _HomePageState extends State<HomePage> {
 
     return hotels.map((hotel) {
       return Card(
-        margin: const EdgeInsets.symmetric(vertical: 12.0,horizontal: 8.0),
+        margin: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 6.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0)
         ),
         elevation: 4.0,
         clipBehavior: Clip.antiAlias,
-        // TODO: Adjust card heights (103)
         child: Column(
-          // TODO: Center items on the card (103)
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
+          children: [
             AspectRatio(
-              aspectRatio: 15 / 11,
+              aspectRatio: 15 / 10,
               child: Image.asset(
                 'assets/hotels-${hotel.id}.jpg',
                 fit: BoxFit.fill,
@@ -66,20 +63,36 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 6),
             Row(
-              children: const [
-                SizedBox(width: 25.0),
-                Icon(Icons.star, color: Colors.yellow, size: 13),
-                Icon(Icons.star, color: Colors.yellow, size: 13),
-                Icon(Icons.star, color: Colors.yellow, size: 13),
+              children: [
+                const SizedBox(width: 25.0),
+                if(hotel.star == 3) ... [
+                  const Icon(Icons.star, color: Colors.yellow, size: 13),
+                  const Icon(Icons.star, color: Colors.yellow, size: 13),
+                  const Icon(Icons.star, color: Colors.yellow, size: 13),
+                ] else if(hotel.star == 2) ... [
+                  const Icon(Icons.star, color: Colors.yellow, size: 13),
+                  const Icon(Icons.star, color: Colors.yellow, size: 13),
+                  const Icon(Icons.star_outline, color: Colors.yellow, size: 13),
+                ] else if(hotel.star == 1) ... [
+                  const Icon(Icons.star, color: Colors.yellow, size: 13),
+                  const Icon(Icons.star_outline, color: Colors.yellow, size: 13),
+                  const Icon(Icons.star_outline, color: Colors.yellow, size: 13),
+                ] else ... [
+                  const Icon(Icons.star_outline, color: Colors.yellow, size: 13),
+                  const Icon(Icons.star_outline, color: Colors.yellow, size: 13),
+                  const Icon(Icons.star_outline, color: Colors.yellow, size: 13),
+                ],
               ],
             ),
             Row(
               children: [
                 const SizedBox(width: 25.0),
-                Text(
-                  hotel.name,
-                  style: theme.textTheme.titleSmall,
-                  maxLines: 1,
+                Expanded(
+                  child: Text(
+                    hotel.name,
+                    style: theme.textTheme.titleSmall,
+                    maxLines: 1,
+                  ),
                 ),
               ],
             ),
@@ -99,6 +112,7 @@ class _HomePageState extends State<HomePage> {
             Container(
               alignment: Alignment.bottomRight,
               width: 300,
+              margin: const EdgeInsets.only(right: 5.0, bottom: 5.0),
               child: TextButton(
                 child: const Text('more'),
                 style: TextButton.styleFrom(
@@ -115,7 +129,7 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
               ),
-            )
+            ),
           ],
         ),
       );
@@ -170,22 +184,24 @@ class _HomePageState extends State<HomePage> {
                   children: <Widget>[
                     const SizedBox(height: 6),
                     Row(
-                      children: const [
-                        Icon(
-                          Icons.star,
-                          color: Colors.yellow,
-                          size: 15,
-                        ),
-                        Icon(
-                          Icons.star,
-                          color: Colors.yellow,
-                          size: 15,
-                        ),
-                        Icon(
-                          Icons.star,
-                          color: Colors.yellow,
-                          size: 15,
-                        ),
+                      children: [
+                        if(hotel.star == 3) ... [
+                          const Icon(Icons.star, color: Colors.yellow, size: 13),
+                          const Icon(Icons.star, color: Colors.yellow, size: 13),
+                          const Icon(Icons.star, color: Colors.yellow, size: 13),
+                        ] else if(hotel.star == 2) ... [
+                          const Icon(Icons.star, color: Colors.yellow, size: 13),
+                          const Icon(Icons.star, color: Colors.yellow, size: 13),
+                          const Icon(Icons.star_outline, color: Colors.yellow, size: 13),
+                        ] else if(hotel.star == 1) ... [
+                          const Icon(Icons.star, color: Colors.yellow, size: 13),
+                          const Icon(Icons.star_outline, color: Colors.yellow, size: 13),
+                          const Icon(Icons.star_outline, color: Colors.yellow, size: 13),
+                        ] else ... [
+                          const Icon(Icons.star_outline, color: Colors.yellow, size: 13),
+                          const Icon(Icons.star_outline, color: Colors.yellow, size: 13),
+                          const Icon(Icons.star_outline, color: Colors.yellow, size: 13),
+                        ],
                       ],
                     ),
                     const SizedBox(height: 3.0),
