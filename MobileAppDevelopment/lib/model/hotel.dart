@@ -13,9 +13,9 @@
 // limitations under the License.
 
 class Hotel {
-  const Hotel({
+  Hotel({
     required this.id,
-    required this.isFeatured,
+    required this.isFavorite,
     required this.star,
     required this.name,
     required this.address,
@@ -24,7 +24,7 @@ class Hotel {
   });
 
   final int id;
-  final bool isFeatured;
+  bool isFavorite;
   final int star ;
   final String name;
   final String address;

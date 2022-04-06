@@ -34,9 +34,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final isSelected = <bool>[false, true];
+  final _starIcon = const Icon(Icons.star, color: Colors.yellow, size: 13) ;
+  final _starOutlineIcon = const Icon(Icons.star_outline, color: Colors.yellow, size: 13) ;
+  List<Hotel> hotels = HotelsRepository.loadHotels();
 
   List<Card> _buildGridCards(BuildContext context) {
-    List<Hotel> hotels = HotelsRepository.loadHotels();
     if (hotels.isEmpty) {
       return const <Card>[];
     }
@@ -56,32 +58,22 @@ class _HomePageState extends State<HomePage> {
           children: [
             AspectRatio(
               aspectRatio: 15 / 10,
-              child: Image.asset(
-                'assets/hotels-${hotel.id}.jpg',
-                fit: BoxFit.fill,
+              child: Hero(
+                tag: 'hotels-${hotel.id}',
+                child: Image.asset(
+                  'assets/hotels-${hotel.id}.jpg',
+                  fit: BoxFit.fill,
+                ),
               ),
             ),
             const SizedBox(height: 6),
             Row(
               children: [
                 const SizedBox(width: 25.0),
-                if(hotel.star == 3) ... [
-                  const Icon(Icons.star, color: Colors.yellow, size: 13),
-                  const Icon(Icons.star, color: Colors.yellow, size: 13),
-                  const Icon(Icons.star, color: Colors.yellow, size: 13),
-                ] else if(hotel.star == 2) ... [
-                  const Icon(Icons.star, color: Colors.yellow, size: 13),
-                  const Icon(Icons.star, color: Colors.yellow, size: 13),
-                  const Icon(Icons.star_outline, color: Colors.yellow, size: 13),
-                ] else if(hotel.star == 1) ... [
-                  const Icon(Icons.star, color: Colors.yellow, size: 13),
-                  const Icon(Icons.star_outline, color: Colors.yellow, size: 13),
-                  const Icon(Icons.star_outline, color: Colors.yellow, size: 13),
-                ] else ... [
-                  const Icon(Icons.star_outline, color: Colors.yellow, size: 13),
-                  const Icon(Icons.star_outline, color: Colors.yellow, size: 13),
-                  const Icon(Icons.star_outline, color: Colors.yellow, size: 13),
-                ],
+                if(hotel.star == 3) ... [_starIcon, _starIcon, _starIcon]
+                else if(hotel.star == 2) ... [_starIcon, _starIcon, _starOutlineIcon]
+                else if(hotel.star == 1) ... [_starIcon, _starOutlineIcon, _starOutlineIcon]
+                  else ... [_starOutlineIcon, _starOutlineIcon, _starOutlineIcon],
               ],
             ),
             Row(
@@ -124,8 +116,7 @@ class _HomePageState extends State<HomePage> {
                   Navigator.pushNamed(
                     context,
                     routeDetail,
-                    // TODO insert argument
-                    arguments: null,
+                    arguments: hotel,
                   );
                 },
               ),
@@ -136,9 +127,7 @@ class _HomePageState extends State<HomePage> {
     }).toList();
   }
 
-
   List<Card> _buildListCards(BuildContext context) {
-    List<Hotel> hotels = HotelsRepository.loadHotels();
     if (hotels.isEmpty) {
       return const <Card>[];
     }
@@ -149,7 +138,7 @@ class _HomePageState extends State<HomePage> {
 
     return hotels.map((hotel) {
       return Card(
-        margin: const EdgeInsets.all(8.0),
+        margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 4.0),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
             side: const BorderSide(width: 0.5, color: Colors.grey),
@@ -170,9 +159,12 @@ class _HomePageState extends State<HomePage> {
               alignment: Alignment.centerLeft,
               child: AspectRatio(
                 aspectRatio: 1,
-                child: Image.asset(
-                 'assets/hotels-${hotel.id}.jpg',
-                  fit: BoxFit.fill
+                child: Hero(
+                  tag: 'hotels-${hotel.id}',
+                  child: Image.asset(
+                   'assets/hotels-${hotel.id}.jpg',
+                    fit: BoxFit.fill
+                  ),
                 ),
               ),
             ),
@@ -185,23 +177,10 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 6),
                     Row(
                       children: [
-                        if(hotel.star == 3) ... [
-                          const Icon(Icons.star, color: Colors.yellow, size: 13),
-                          const Icon(Icons.star, color: Colors.yellow, size: 13),
-                          const Icon(Icons.star, color: Colors.yellow, size: 13),
-                        ] else if(hotel.star == 2) ... [
-                          const Icon(Icons.star, color: Colors.yellow, size: 13),
-                          const Icon(Icons.star, color: Colors.yellow, size: 13),
-                          const Icon(Icons.star_outline, color: Colors.yellow, size: 13),
-                        ] else if(hotel.star == 1) ... [
-                          const Icon(Icons.star, color: Colors.yellow, size: 13),
-                          const Icon(Icons.star_outline, color: Colors.yellow, size: 13),
-                          const Icon(Icons.star_outline, color: Colors.yellow, size: 13),
-                        ] else ... [
-                          const Icon(Icons.star_outline, color: Colors.yellow, size: 13),
-                          const Icon(Icons.star_outline, color: Colors.yellow, size: 13),
-                          const Icon(Icons.star_outline, color: Colors.yellow, size: 13),
-                        ],
+                        if(hotel.star == 3) ... [_starIcon, _starIcon, _starIcon]
+                        else if(hotel.star == 2) ... [_starIcon, _starIcon, _starOutlineIcon]
+                        else if(hotel.star == 1) ... [_starIcon, _starOutlineIcon, _starOutlineIcon]
+                          else ... [_starOutlineIcon, _starOutlineIcon, _starOutlineIcon],
                       ],
                     ),
                     const SizedBox(height: 3.0),
@@ -215,6 +194,7 @@ class _HomePageState extends State<HomePage> {
                       hotel.address,
                       style: theme.textTheme.bodySmall,
                     ),
+                    const SizedBox(height: 12.0),
                     Container(
                       alignment: Alignment.bottomRight,
                       width: 300,
@@ -226,8 +206,12 @@ class _HomePageState extends State<HomePage> {
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
                         onPressed: () {
-                          Navigator.pushNamed(context, routeDetail);
-                        },
+                          Navigator.pushNamed(
+                            context,
+                            routeDetail,
+                            arguments: hotel,
+                          );
+                        }
                       ),
                     )
                   ],
@@ -418,11 +402,4 @@ class _HomePageState extends State<HomePage> {
 
 void _launchURL() async {
   if (!await launch(handongUrl)) throw 'Could not launch $handongUrl';
-}
-
-class ScreenArguments {
-  final String title;
-  final String message;
-
-  ScreenArguments(this.title, this.message);
 }

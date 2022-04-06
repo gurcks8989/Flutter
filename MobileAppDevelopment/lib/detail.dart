@@ -12,87 +12,102 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:MobileAppDevelopment/login.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:intl/intl.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-import 'model/hotels_repository.dart';
 import 'model/hotel.dart';
 
 
 class DetailPage extends StatefulWidget {
-  const DetailPage({Key? key}) : super(key: key);
+  final Hotel hotel ;
+  const DetailPage({Key? key, required this.hotel}) : super(key: key);
 
   @override
   State<DetailPage> createState() => _DetailPageState();
 }
 
 class _DetailPageState extends State<DetailPage> {
+  final _starIcon = const Icon(Icons.star, color: Colors.yellow, size: 30) ;
+  final _starOutlineIcon = const Icon(Icons.star_outline, color: Colors.yellow, size: 30) ;
+
   @override
   Widget build(BuildContext context) {
     Widget titleSection = Container(
-      padding: const EdgeInsets.all(32),
-      child: Row(
+      padding: const EdgeInsets.symmetric(horizontal: 32),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            /*1*/
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                /*2*/
-                Container(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: const Text(
-                    'Oeschinen Lake Campground',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+          Row(
+            children: [
+              if(widget.hotel.star == 3) ... [_starIcon, _starIcon, _starIcon]
+              else if(widget.hotel.star == 2) ... [_starIcon, _starIcon, _starOutlineIcon]
+              else if(widget.hotel.star == 1) ... [_starIcon, _starOutlineIcon, _starOutlineIcon]
+              else ... [_starOutlineIcon, _starOutlineIcon, _starOutlineIcon],
+            ],
+          ),
+          const SizedBox(height: 10.0),
+          Container(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: AnimatedTextKit(
+              animatedTexts: [
+                TypewriterAnimatedText(
+                  widget.hotel.name,
+                  textStyle: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xff2068a8),
                   ),
-                ),
-                Text(
-                  'Kandersteg, Switzerland',
-                  style: TextStyle(
-                    color: Colors.grey[500],
-                  ),
+                  speed: const Duration(milliseconds: 300),
                 ),
               ],
-            ),
+
+              totalRepeatCount: 4,
+              pause: const Duration(milliseconds: 500),
+              displayFullTextOnTap: true,
+              stopPauseOnTap: true,
+            )
           ),
-          /*3*/
-          Icon(
-            Icons.star,
-            color: Colors.red[500],
+          const SizedBox(height: 10.0),
+          Row(
+            children: [
+              Icon(
+                Icons.location_on,
+                color: Colors.blue[300],
+              ),
+              const SizedBox(width: 10.0),
+              Text(
+                widget.hotel.address,
+                style: TextStyle(
+                  color: Colors.grey[500],
+                ),
+              ),
+            ],
           ),
-          const Text('41'),
+          const SizedBox(height: 5.0),
+          Row(
+            children: [
+              Icon(
+                Icons.phone_enabled,
+                color: Colors.blue[300],
+              ),
+              const SizedBox(width: 10.0),
+              Text(
+                widget.hotel.phone,
+                style: TextStyle(
+                  color: Colors.grey[500],
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
 
-    Color color = Theme
-        .of(context)
-        .primaryColor;
-
-    Widget buttonSection = Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        _buildButtonColumn(color, Icons.call, 'CALL'),
-        _buildButtonColumn(color, Icons.near_me, 'ROUTE'),
-        _buildButtonColumn(color, Icons.share, 'SHARE'),
-      ],
-    );
-
-    Widget textSection = const Padding(
-      padding: EdgeInsets.all(32),
+    Widget textSection = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 32),
       child: Text(
-        'Lake Oeschinen lies at the foot of the Blüemlisalp in the Bernese '
-            'Alps. Situated 1,578 meters above sea level, it is one of the '
-            'larger Alpine Lakes. A gondola ride from Kandersteg, followed by a '
-            'half-hour walk through pastures and pine forest, leads you to the '
-            'lake, which warms to 20 degrees Celsius in the summer. Activities '
-            'enjoyed here include rowing, and riding the summer toboggan run.',
+        widget.hotel.content,
         softWrap: true,
       ),
     );
@@ -102,40 +117,49 @@ class _DetailPageState extends State<DetailPage> {
         title: const Text('Detail'),
         centerTitle: true,
       ),
-      body: ListView(
+      body: Stack(
         children: [
-          Image.asset(
-            'assets/lake.jpg',
-            width: 600,
-            height: 240,
-            fit: BoxFit.cover,
+          ListView(
+            children: [
+              Hero(
+                tag: 'hotels-${widget.hotel.id}',
+                child: Material(
+                  child: InkWell(
+                    child: Image.asset(
+                      'assets/hotels-${widget.hotel.id}.jpg',
+                      width: 600,
+                      height: 270,
+                      fit: BoxFit.cover,
+                    ),
+                    onDoubleTap: (){
+                      setState(() {
+                        widget.hotel.isFavorite = !widget.hotel.isFavorite ;
+                      });
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20.0),
+              titleSection,
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 32.0),
+                child: Divider(color: Colors.grey),
+              ),
+              textSection,
+              const SizedBox(height: 20.0),
+            ],
           ),
-          titleSection,
-          buttonSection,
-          textSection,
-        ],
-      ),
-    );
-  }
-
-  Column _buildButtonColumn(Color color, IconData icon, String label) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, color: color),
-        Container(
-          margin: const EdgeInsets.only(top: 8),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: color,
+          Container(
+            padding: const EdgeInsets.all(10.0),
+            alignment: Alignment.topRight,
+            child: Icon(
+              widget.hotel.isFavorite ? Icons.favorite : Icons.favorite_border ,
+              color: Colors.red[700],
+              size: 30,
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

@@ -18,6 +18,8 @@ import 'home.dart';
 import 'login.dart';
 import 'signup.dart';
 import 'detail.dart';
+import 'search.dart';
+import 'model/hotel.dart';
 
 const routeHome = '/home';
 const routeMain = '/main';
@@ -62,26 +64,20 @@ class ShrineApp extends StatelessWidget {
       case routeSignUp:
         return MaterialPageRoute(builder: (_) => const SignUpPage());
       case routeDetail:
-        // final ScreenArguments args = settings.arguments;
-        //
-        // // Then, extract the required data from the arguments and
-        // // pass the data to the correct screen.
-        // return MaterialPageRoute(
-        //     builder: (context) {
-        //       return PassArgumentsScreen(
-        //         title: args.title,
-        //         message: args.message,
-        //       );
-        //     },
-        return MaterialPageRoute(builder: (_) => const DetailPage());
+        final _hotel = settings.arguments as Hotel ;
+        return MaterialPageRoute(
+            builder: (context) {
+              return DetailPage(hotel: _hotel) ;
+            },
+        ) ;
       case routeHome:
-        return MaterialPageRoute(builder: (_) => const DetailPage());
+        return MaterialPageRoute(builder: (_) => const HomePage());
       case routeSearch:
-        return MaterialPageRoute(builder: (_) => const DetailPage());
+        return MaterialPageRoute(builder: (_) => const SearchPage());
       case routeFavorite:
-        return MaterialPageRoute(builder: (_) => const DetailPage());
+        return MaterialPageRoute(builder: (_) => const HomePage());
       case routeMyPage:
-        return MaterialPageRoute(builder: (_) => const DetailPage());
+        return MaterialPageRoute(builder: (_) => const HomePage());
       default :
         return MaterialPageRoute(
           builder: (_) => Scaffold(
