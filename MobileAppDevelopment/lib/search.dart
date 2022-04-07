@@ -40,29 +40,34 @@ class _SearchPageState extends State<SearchPage> {
       body: Center(
         child: ListView(
           children: <Widget> [
-            ExpansionPanel(
-              headerBuilder: (BuildContext context, bool isExpanded) {
-                return const ListTile(
-                  title: Text(
-                    'Filter',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+            ExpansionPanelList(
+              animationDuration: const Duration(milliseconds: 2000),
+              children : [
+                ExpansionPanel(
+                  headerBuilder: (BuildContext context, bool isExpanded) {
+                    return const ListTile(
+                      title: Text(
+                        'Filter',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    );
+                  },
+                  body: const ListTile(
+                    title: Text('select fitters'),
+                    subtitle:
+                    Text('To delete this panel, tap the trash can icon'),
+                    trailing: Icon(Icons.delete),
+                    // onTap: () {
+                    //   setState(() {
+                    //     //_data.removeWhere((Item currentItem) => item == currentItem);
+                    //   });
+                    // }
                   ),
-                );
-              },
-              body: const ListTile(
-                title: Text('select fitters'),
-                subtitle:
-                Text('To delete this panel, tap the trash can icon'),
-                trailing: Icon(Icons.delete),
-                // onTap: () {
-                //   setState(() {
-                //     //_data.removeWhere((Item currentItem) => item == currentItem);
-                //   });
-                // }
-              ),
-              isExpanded: isExpanded,
+                  isExpanded: isExpanded,
+                ),
+              ],
             ),
           ],
         ),
