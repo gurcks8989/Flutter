@@ -26,12 +26,11 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> with RestorationMixin {
+  int _checkedCnt = 0 ;
   final _checked = <bool>[false, false, false];
   final _filtersName = <String>['No Kids Zone', 'Pet-Friendly', 'Free breakfast'];
   bool isExpanded = false ;
   var dayData = ["dummy", "MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"] ;
-
-  List<Hotel> hotels = HotelsRepository.loadHotels();
 
   @override
   String? get restorationId => widget.restorationId;
@@ -163,6 +162,7 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
                       onChanged: (bool? value) {
                         setState(() {
                           _checked[index] = value!;
+                          _checkedCnt += value ? 1 : -1 ;
                         });
                       },
                       contentPadding: const EdgeInsets.symmetric(horizontal: 100),
@@ -224,31 +224,78 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
           onPressed: () =>
               showDialog(
                 context: context,
-                barrierDismissible: false,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0)),
-                    title: Column(
-                      children: <Widget>[
-                        Text("Dialog Title"),
-                      ],
+                    titlePadding: EdgeInsets.zero,
+                    title: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 30.0),
+                      color: Colors.blue,
+                      child: const Center(
+                        child: Text(
+                          "Please check\n"
+                          "your choice :)",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                     ),
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(
-                          "Dialog Content",
+                        ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading: const Icon(Icons.filter_list, color: Colors.blue),
+                          style: ListTileStyle.drawer,
+                          textColor: Colors.grey,
+                          title: Text(
+                              _checkedCnt == 3 ?
+                              '${_filtersName[0]} / ${_filtersName[1]} / ${_filtersName[2]}'
+                            : (_checkedCnt == 2 ?
+                              '${_filtersName[_checked[1] && _checked[2] ? 1 : 0]} / ${_filtersName[_checked[0] && _checked[1] ? 1 : 2]}'
+                            : (_checkedCnt == 1 ?
+                              _checked[0] ? _filtersName[0] : (_checked[1] ? _filtersName[1] : _filtersName[2])
+                            : 'No filter selected'))
+                          ),
+                        ),
+                        ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading: const Icon(Icons.calendar_month, color: Colors.blue),
+                          style: ListTileStyle.drawer,
+                          textColor: Colors.grey,
+                          title: Row(
+                            children: [
+                              const Text('IN', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+                              const SizedBox(width: 15.0),
+                              Text('${_selectedDate.value.year}.${_selectedDate.value.month}.${_selectedDate.value.day} (${dayData[_selectedDate.value.weekday]})'),
+                            ],
+                          ),
                         ),
                       ],
                     ),
+                    actionsAlignment: MainAxisAlignment.center,
                     actions: <Widget>[
-                      TextButton(
-                        child: Text("확인"),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 25.0)),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0))
+                          ),
+                        ),
+                        child: const Text('Search'),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 25.0)),
+                          backgroundColor: MaterialStateProperty.all<Color>(Colors.grey),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                          ),
+                        ),
+                        child: const Text("Cancel"),
+                        onPressed: () => Navigator.pop(context),
                       ),
                     ],
                   );

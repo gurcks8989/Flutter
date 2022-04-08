@@ -19,6 +19,8 @@ import 'login.dart';
 import 'signup.dart';
 import 'detail.dart';
 import 'search.dart';
+import 'favorite.dart';
+import 'mypage.dart';
 import 'model/hotel.dart';
 
 const routeHome = '/home';
@@ -64,10 +66,9 @@ class ShrineApp extends StatelessWidget {
       case routeSignUp:
         return MaterialPageRoute(builder: (_) => const SignUpPage());
       case routeDetail:
-        final _hotel = settings.arguments as Hotel ;
         return MaterialPageRoute(
             builder: (context) {
-              return DetailPage(hotel: _hotel) ;
+              return DetailPage(hotel: settings.arguments! as Hotel) ;
             },
         ) ;
       case routeHome:
@@ -75,9 +76,17 @@ class ShrineApp extends StatelessWidget {
       case routeSearch:
         return MaterialPageRoute(builder: (_) => const SearchPage());
       case routeFavorite:
-        return MaterialPageRoute(builder: (_) => const HomePage());
+        return MaterialPageRoute(
+          builder: (context) {
+            return FavoritePage(hotels: settings.arguments! as List<Hotel>) ;
+          },
+        ) ;
       case routeMyPage:
-        return MaterialPageRoute(builder: (_) => const HomePage());
+        return MaterialPageRoute(
+          builder: (context) {
+            return MyPage(hotels: settings.arguments! as List<Hotel>) ;
+          },
+        ) ;
       default :
         return MaterialPageRoute(
           builder: (_) => Scaffold(

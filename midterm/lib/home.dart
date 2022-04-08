@@ -12,12 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import 'model/hotels_repository.dart';
 import 'model/hotel.dart';
 import 'app.dart';
@@ -43,9 +39,6 @@ class _HomePageState extends State<HomePage> {
       return const <Card>[];
     }
     final ThemeData theme = Theme.of(context);
-    final NumberFormat formatter = NumberFormat.simpleCurrency(
-        locale: Localizations.localeOf(context).toString());
-
     return hotels.map((hotel) {
       return Card(
         margin: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 6.0),
@@ -131,11 +124,7 @@ class _HomePageState extends State<HomePage> {
     if (hotels.isEmpty) {
       return const <Card>[];
     }
-
     final ThemeData theme = Theme.of(context);
-    final NumberFormat formatter = NumberFormat.simpleCurrency(
-        locale: Localizations.localeOf(context).toString());
-
     return hotels.map((hotel) {
       return Card(
         margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 4.0),
@@ -277,7 +266,7 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.lightBlue,
                 ),
               ),
-              title: Text('Home'),
+              title: const Text('Home'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, routeHome);
@@ -291,7 +280,7 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.lightBlue,
                 ),
               ),
-              title: Text('Search'),
+              title: const Text('Search'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, routeSearch);
@@ -305,10 +294,14 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.lightBlue,
                 ),
               ),
-              title: Text('Favorite Hotel'),
+              title: const Text('Favorite Hotel'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, routeFavorite);
+                Navigator.pushNamed(
+                  context,
+                  routeFavorite,
+                  arguments: hotels,
+                );
               },
             ),
             ListTile(
@@ -319,10 +312,14 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.lightBlue,
                 ),
               ),
-              title: Text('My page'),
+              title: const Text('My page'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, routeMyPage);
+                Navigator.pushNamed(
+                  context,
+                  routeMyPage,
+                  arguments: hotels,
+                );
               },
             ),
             ListTile(
@@ -333,7 +330,7 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.lightBlue,
                 ),
               ),
-              title: Text('Log Out'),
+              title: const Text('Log Out'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, routeLogin);
