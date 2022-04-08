@@ -15,7 +15,7 @@
 import 'package:flutter/material.dart';
 import 'model/hotels_repository.dart';
 import 'model/hotel.dart';
-
+import 'package:intl/intl.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key, this.restorationId}) : super(key: key);
@@ -27,6 +27,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> with RestorationMixin {
   final _checked = <bool>[false, false, false];
+  final _filtersName = <String>['No Kids Zone', 'Pet-Friendly', 'Free breakfast'];
   bool isExpanded = false ;
   var dayData = ["dummy", "MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"] ;
 
@@ -35,7 +36,11 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
   @override
   String? get restorationId => widget.restorationId;
 
-  final RestorableDateTime _selectedDate = RestorableDateTime(DateTime.now());
+  final RestorableDateTime _selectedDate = RestorableDateTime(DateTime(
+    DateTime.now().year,
+    DateTime.now().month,
+    DateTime.now().day,
+  ));
   late final RestorableRouteFuture<DateTime?> _restorableDatePickerRouteFuture =
   RestorableRouteFuture<DateTime?>(
     onComplete: _selectDate,
@@ -65,14 +70,13 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
     );
   }
 
-  final RestorableTimeOfDay _selectedTime = RestorableTimeOfDay(const TimeOfDay(hour: 0, minute: 0)) ;
   late final RestorableRouteFuture<TimeOfDay?> _restorableTimePickerRouteFuture =
   RestorableRouteFuture<TimeOfDay?>(
-    //onComplete: _selectDate,
+    onComplete: _selectTime,
     onPresent: (NavigatorState navigator, Object? arguments) {
       return navigator.restorablePush(
         _timePickerRoute,
-        arguments: _selectedTime.value,
+        arguments: _selectedDate.value.millisecondsSinceEpoch,
       );
     },
   ) ;
@@ -84,10 +88,10 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
     return DialogRoute<TimeOfDay>(
       context: context,
       builder: (BuildContext context) {
-        return const TimePickerDialog(
+        return TimePickerDialog(
           restorationId: 'time_picker_dialog',
           initialEntryMode: TimePickerEntryMode.dial,
-          initialTime: TimeOfDay(hour: 0, minute: 0),
+          initialTime: TimeOfDay.fromDateTime(DateTime.fromMillisecondsSinceEpoch(arguments! as int)),
         );
       }
     ) ;
@@ -97,13 +101,28 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
   void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
     registerForRestoration(_selectedDate, 'selected_date');
     registerForRestoration(
-      _restorableDatePickerRouteFuture, 'date_selectDate_picker_route_future');
+        _restorableDatePickerRouteFuture, 'date_selectDate_picker_route_future');
+    registerForRestoration(
+        _restorableTimePickerRouteFuture, 'date_selectTime_picker_route_future');
   }
 
   void _selectDate(DateTime? newSelectedDate) {
     if (newSelectedDate != null) {
       setState(() {
         _selectedDate.value = newSelectedDate ;
+      });
+    }
+  }
+
+  void _selectTime(TimeOfDay? newSelectedTime) {
+    if (newSelectedTime != null) {
+      setState(() {
+        _selectedDate.value = _selectedDate.value.add(
+          Duration(
+            hours: newSelectedTime.hour,
+            minutes: newSelectedTime.minute
+          )
+        ) ;
       });
     }
   }
@@ -117,101 +136,124 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
         centerTitle: true,
         title: const Text('Search'),
       ),
-      body: Center(
-        child: ListView(
-          children: <Widget> [
-            ExpansionPanelList(
-              expansionCallback: (panelIndex, isExpanded){
-                setState(() {this.isExpanded = !isExpanded ;});
-              },
-              expandedHeaderPadding: EdgeInsets.zero,
-              animationDuration: const Duration(milliseconds: 1000),
-              children : [
-                ExpansionPanel(
-                  canTapOnHeader: true,
-                  headerBuilder: (BuildContext context, bool isExpanded) {
-                    return const ListTile(
-                      contentPadding: EdgeInsets.only(left: 15, right: 120),
-                      title: Text(
-                        'Filter',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      trailing: Text('select fitters'),
-                    );
-                  },
-                  isExpanded: isExpanded,
-                  body: Column(
-                    children: [
-                      CheckboxListTile(
-                        title: const Text("No Kids Zone",),
-                        value: _checked[0],
-                        onChanged: (bool? value) {
-                          setState(() {
-                            _checked[0] = value! ;
-                          });
-                        },
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 100),
-                        controlAffinity: ListTileControlAffinity.leading,
-                      ),
-                      CheckboxListTile(
-                        title: const Text("Pet-Friendly"),
-                        value: _checked[1],
-                        onChanged: (bool? value) {
-                          setState(() {
-                            _checked[1] = value! ;
-                          });
-                        },
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 100),
-                        controlAffinity: ListTileControlAffinity.leading,
-                      ),
-                      CheckboxListTile(
-                        title: const Text("Free breakfast"),
-                        value: _checked[2],
-                        onChanged: (bool? value) {
-                          setState(() {
-                            _checked[2] = value! ;
-                          });
-                        },
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 100),
-                        controlAffinity: ListTileControlAffinity.leading,
-                      ),
-                    ],
+      body: ListView(
+        children: <Widget> [
+          ExpansionPanelList(
+            expansionCallback: (panelIndex, isExpanded){
+              setState(() {this.isExpanded = !isExpanded ;});
+            },
+            expandedHeaderPadding: EdgeInsets.zero,
+            animationDuration: const Duration(milliseconds: 1000),
+            children : [
+              ExpansionPanel(
+                canTapOnHeader: true,
+                headerBuilder: (BuildContext context, bool isExpanded) {
+                  return const ListTile(
+                    contentPadding: EdgeInsets.only(left: 15, right: 120),
+                    title: Text('Filter', style: TextStyle(fontWeight: FontWeight.bold)),
+                    trailing: Text('select fitters'),
+                  );
+                },
+                isExpanded: isExpanded,
+                body: Column(
+                  children: List.generate(3, (index) =>
+                    CheckboxListTile(
+                      title: Text(_filtersName[index]),
+                      value: _checked[index],
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _checked[index] = value!;
+                        });
+                      },
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 100),
+                      controlAffinity: ListTileControlAffinity.leading,
+                    ),
+                  )
+                ),
+              ),
+            ],
+          ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const ListTile(
+                  title: Text('Date', style: TextStyle(fontWeight: FontWeight.bold))),
+                ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 40.0),
+                  title: const Text('🗓️check-in'),
+                  subtitle: Text(
+                    '${_selectedDate.value.year}.${_selectedDate.value.month}.${_selectedDate.value.day} (${dayData[_selectedDate.value.weekday]})'
+                    '\n${DateFormat('hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(_selectedDate.value.millisecondsSinceEpoch))}'
+                  ),
+                  trailing: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith((states) {
+                        if (states.contains(MaterialState.pressed)) {
+                          return Colors.blue[300];
+                        } else {
+                          return Colors.blue[100];
+                        }
+                      }),
+                    ),
+                    onPressed: () {
+                      _restorableTimePickerRouteFuture.present() ;
+                      _restorableDatePickerRouteFuture.present() ;
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 35.0),
+                      child: const Text('select date',
+                        style: TextStyle(color: Colors.black)),
+                    ),
                   ),
                 ),
               ],
             ),
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const ListTile(
-                    title: Text(
-                      'Date',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  ListTile(
-                    title: const Text('🗓️check-in'),
-                    subtitle: Text(
-                      '${_selectedDate.value.year}.${_selectedDate.value.month}.${_selectedDate.value.day} (${dayData[_selectedDate.value.weekday]})'
-                      '\n${_selectedTime.value.hour}:${_selectedTime.value.minute} am'
-                    ),
-                    trailing: RaisedButton(
-                      color: Colors.blue,
-                      textColor: Colors.white,
-                      onPressed: () {
-                        _restorableDatePickerRouteFuture.present();
-                      },
-                      child: const Text('select date'),
-                    ),
-                  ),
-                  // Text(
-                  //   '결과 : $_selectedDate',
-                  // ),
-                ],
-              ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 130.0, vertical: 5.0),
+        child: ElevatedButton(
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0))
             ),
-          ],
+          ),
+          child: const Text('Search', style: TextStyle(fontSize: 20)),
+          onPressed: () =>
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0)),
+                    title: Column(
+                      children: <Widget>[
+                        Text("Dialog Title"),
+                      ],
+                    ),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          "Dialog Content",
+                        ),
+                      ],
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: Text("확인"),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  );
+                },
+              ),
         ),
       ),
     );
