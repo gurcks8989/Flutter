@@ -186,7 +186,7 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 12.0),
                     Container(
                       alignment: Alignment.bottomRight,
-                      width: 300,
+                      width: 1000,
                       child: TextButton(
                         child: const Text('more'),
                         style: TextButton.styleFrom(

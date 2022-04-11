@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'model/hotels_repository.dart';
 import 'model/hotel.dart';
@@ -38,10 +39,10 @@ class _FavoritePageState extends State<FavoritePage> {
       body: ListView.builder(
         itemCount: widget.hotels.length,
         itemBuilder: (context, index) {
-          if(!widget.hotels[index].isFavorite) {
-            return Container() ;
-          }
           final _hotel = widget.hotels[index];
+          if(!_hotel.isFavorite) {
+            return Container(padding: EdgeInsets.zero) ;
+          }
           return Dismissible(
             key: Key(_hotel.name),
             onDismissed: (direction) {

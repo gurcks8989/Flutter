@@ -62,6 +62,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               obscureText: true,
             ),
+            const SizedBox(height: 6.0),
             ButtonBar(
               alignment: MainAxisAlignment.spaceAround,
               buttonPadding:const EdgeInsets.symmetric(horizontal: 5.0),

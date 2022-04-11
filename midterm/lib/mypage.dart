@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'model/hotels_repository.dart';
 import 'model/hotel.dart';
+import 'app.dart';
 import 'package:intl/intl.dart';
 
 class MyPage extends StatefulWidget {
@@ -27,6 +28,80 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
+
+  List<Card> _buildCards(BuildContext context) {
+    return widget.hotels.map((hotel) {
+      if(!hotel.isFavorite) {
+        return const Card(margin: EdgeInsets.zero) ;
+      }
+      return Card(
+        margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 6.0),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0)
+        ),
+        elevation: 4.0,
+        clipBehavior: Clip.antiAlias,
+        child: Stack(
+          children: [
+            AspectRatio(
+              aspectRatio: 18 / 10,
+              child: Hero(
+                tag: 'hotels-${hotel.id}',
+                child: Material(
+                  child: InkWell(
+                    child: Image.asset(
+                      'assets/hotels-${hotel.id}.jpg',
+                      fit: BoxFit.fill,
+                    ),
+                    onTap: () =>
+                      Navigator.pushNamed(
+                        context,
+                        routeDetail,
+                        arguments: hotel,
+                      ),
+                  ),
+                ),
+              ),
+            ),
+            InkWell(
+              child: AspectRatio(
+                aspectRatio: 18 / 10,
+                child: Container(
+                  color: Colors.black.withOpacity(0.2),
+                  alignment: Alignment.bottomLeft,
+                  child: ListTile(
+                    title: Text(
+                      hotel.name,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Text(
+                      hotel.address,
+                      style: const TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              onTap: () {
+                Navigator.pop(context) ;
+                Navigator.pushNamed(
+                  context,
+                  routeDetail,
+                  arguments: hotel,
+                ) ;
+              }
+            ),
+          ],
+        ),
+      );
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: Return an AsymmetricView (104)
@@ -36,34 +111,41 @@ class _MyPageState extends State<MyPage> {
         centerTitle: true,
         title: const Text('My Page'),
       ),
-      body: ListView(
-        children: [
-          Lottie.network('https://assets3.lottiefiles.com/packages/lf20_kd5rzej5.json'),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            Center(
+              child: ClipOval(
+                child: Container(
+                  width: 150,
+                  color: Colors.redAccent,
+                  child: Lottie.asset('assets/lf20_kd5rzej5.json'),
+                ),
+              ),
+            ),
+            const ListTile(
+              title: Center(child: Text('Hyeokchan Kwon', style: TextStyle(fontWeight: FontWeight.bold))),
+              subtitle: Center(child: Text('21700057')),
+            ),
+            const ListTile(
+              title: Text(
+                'My Favorite Hotel List',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+            ),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                children: _buildCards(context),
+              ),
+            ),
+          ],
+        ),
       ),
-
-      // ListView.builder(
-      //   itemCount: widget.hotels.length,
-      //   itemBuilder: (context, index) {
-      //     if(!widget.hotels[index].isFavorite) {
-      //       return Container() ;
-      //     }
-      //     final _hotel = widget.hotels[index];
-      //     return Dismissible(
-      //       key: Key(_hotel.name),
-      //       onDismissed: (direction) {
-      //         setState(() {
-      //           widget.hotels[index].isFavorite = false ;
-      //         });
-      //       },
-      //       // Show a red background as the item is swiped away.
-      //       background: Container(color: Colors.red),
-      //       child: ListTile(
-      //         title: Text(_hotel.name),
-      //       ),
-      //     );
-      //   },
-      // ),
     );
   }
 }
