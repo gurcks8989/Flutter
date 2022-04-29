@@ -120,7 +120,7 @@ class _MyPageState extends State<MyPage> {
                 child: Container(
                   width: 150,
                   color: Colors.redAccent,
-                  child: Lottie.asset('assets/lf20_kd5rzej5.json'),
+                  child: Lottie.network('https://assets3.lottiefiles.com/packages/lf20_kd5rzej5.json'),
                 ),
               ),
             ),
