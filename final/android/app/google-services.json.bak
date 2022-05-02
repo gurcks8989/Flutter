@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "265981542825",
+    "project_id": "mad-final-a7696",
+    "storage_bucket": "mad-final-a7696.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:265981542825:android:d0f09f8c8dc950138f84b8",
+        "android_client_info": {
+          "package_name": "com.example.shrine"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "265981542825-bfou7q1t38kh5ra8tbfpmo7hpcv7etqg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdmNDdiiSX-pmO1bELOPnWh-BfpK37Opo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "265981542825-bfou7q1t38kh5ra8tbfpmo7hpcv7etqg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

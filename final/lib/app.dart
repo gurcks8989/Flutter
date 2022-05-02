@@ -12,32 +12,69 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'home.dart';
 import 'login.dart';
 
+const routeHome = '/home';
+const routeMain = '/main';
+const routeLogin = '/login';
+const routeSignUp = '/signup';
+const routeSearch = '/search';
+const routeDetail = '/detail';
+const routeFavorite = '/favorite';
+const routeMyPage = '/mypage';
+
 // TODO: Convert ShrineApp to stateful widget (104)
-class ShrineApp extends StatelessWidget {
-  const ShrineApp({Key? key}) : super(key: key);
+class App extends StatelessWidget {
+  const App({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Shrine',
-      initialRoute: '/login',
-      routes: {
-        '/login': (BuildContext context) => const LoginPage(),
-        // TODO: Change to a Backdrop with a HomePage frontLayer (104)
-        '/': (BuildContext context) => const HomePage(),
-        // TODO: Make currentCategory field take _currentCategory (104)
-        // TODO: Pass _currentCategory for frontLayer (104)
-        // TODO: Change backLayer field value to CategoryMenuPage (104)
-      },
-      // TODO: Add a theme (103)
+      title: 'final',
+      home: const HomePage(),
+      initialRoute: routeLogin,
+      onGenerateRoute: _getRoute,
+      theme: ThemeData(
+        colorScheme: ThemeData
+            .light()
+            .colorScheme
+            .copyWith(
+          secondary: Colors.black,
+          error: Colors.red[600],
+        ),
+      ),
     );
   }
-}
 
-// TODO: Build a Shrine Theme (103)
-// TODO: Build a Shrine Text Theme (103)
+  Route<dynamic>? _getRoute(RouteSettings settings) {
+    switch(settings.name){
+      case routeMain:
+        return MaterialPageRoute(builder: (_) => const HomePage());
+      case routeLogin:
+        return MaterialPageRoute(builder: (_) => const LoginPage());
+      // case routeFavorite:
+      //   return MaterialPageRoute(
+      //     builder: (context) {
+      //       return FavoritePage(hotels: settings.arguments! as List<Hotel>) ;
+      //     },
+      //   ) ;
+      // case routeMyPage:
+      //   return MaterialPageRoute(
+      //     builder: (context) {
+      //       return MyPage(hotels: settings.arguments! as List<Hotel>) ;
+      //     },
+      //   ) ;
+      default :
+        return MaterialPageRoute(
+          builder: (_) => Scaffold(
+            body: Center(
+                child: Text('No route defined for ${settings.name}')),
+          )
+        );
+    }
+  }
+}
