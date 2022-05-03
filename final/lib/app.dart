@@ -15,17 +15,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'addProduct.dart';
 import 'home.dart';
 import 'login.dart';
 
-const routeHome = '/home';
-const routeMain = '/main';
 const routeLogin = '/login';
-const routeSignUp = '/signup';
-const routeSearch = '/search';
+const routeHome = '/';
+const routeAddProduct = '/addProduct';
 const routeDetail = '/detail';
-const routeFavorite = '/favorite';
-const routeMyPage = '/mypage';
+const routeProfile = '/profile';
+
+enum ApplicationLoginState {
+  loggedOut,
+  googleLogin,
+  guestLogin,
+}
 
 // TODO: Convert ShrineApp to stateful widget (104)
 class App extends StatelessWidget {
@@ -52,10 +56,12 @@ class App extends StatelessWidget {
 
   Route<dynamic>? _getRoute(RouteSettings settings) {
     switch(settings.name){
-      case routeMain:
-        return MaterialPageRoute(builder: (_) => const HomePage());
       case routeLogin:
         return MaterialPageRoute(builder: (_) => const LoginPage());
+      case routeHome:
+        return MaterialPageRoute(builder: (_) => const HomePage());
+      case routeAddProduct:
+        return MaterialPageRoute(builder: (_) => const AddProductPage());
       // case routeFavorite:
       //   return MaterialPageRoute(
       //     builder: (context) {
