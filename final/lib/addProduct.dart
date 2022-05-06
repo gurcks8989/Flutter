@@ -14,6 +14,7 @@
 
 import 'dart:io';
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shrine/app.dart';
@@ -35,22 +36,37 @@ class _AddProductPageState extends State<AddProductPage> {
       _image = image!;
     });
   }
+  final _productNameController = TextEditingController();
+  final _priceController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  late ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    Widget _boxContents = IconButton(
-      onPressed: () {
-        getImageFromGallery();
-      },
-      icon: Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.6), shape: BoxShape.circle),
-          child: Icon(
-            Icons.camera,
-            color: Theme.of(context).colorScheme.primary,
-          )
-      ),
+    Widget _boxContents = ButtonBar(
+      children: [
+        IconButton(
+          onPressed: () {
+            getImageFromGallery();
+          },
+          icon: Icon(
+            Icons.camera_alt,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+        )
+      ]
     );
 
   return Scaffold(
@@ -76,31 +92,74 @@ class _AddProductPageState extends State<AddProductPage> {
                 color: Colors.white,
               ),
             ),
-            onPressed: () => Navigator.pushNamed(context, routeAddProduct),
+            onPressed: () {
+              print('save') ;
+              if(_image == null){
+
+              }
+            },
           ),
         ],
       ),
-      body: Center(
+      body: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(
           children: [
             Container(
               color: Colors.grey[300],
               height: 300.0,
-              child: Center(
-                child: _image == null
-                  ? const Icon(
+              child:  _image == null
+              ? const Center(
+                  child: Icon(
                     Icons.image_rounded,
                     color: Colors.grey,
                     size: 120,
-                  )
-                  : Image.file(
-                    File(_image!.path)
                   ),
+                )
+              : Image.file(
+                  File(_image!.path),
+                  fit: BoxFit.fitWidth,
                 ),
               ),
             _boxContents,
+            TextField(
+              controller : _productNameController,
+              decoration: InputDecoration(
+                hintText: 'Product Name',
+              ),
+              onTap: (){
+                //120만큼 500milSec 동안 뷰를 올려줌
+                _scrollController.animateTo(500.0,
+                    duration: Duration(milliseconds: 500),
+                    curve: Curves.ease);
+              },
+            ),
+            TextField(
+              controller : _priceController,
+              decoration: InputDecoration(
+                hintText: 'Price',
+              ),
+              onTap: (){
+                //120만큼 500milSec 동안 뷰를 올려줌
+                _scrollController.animateTo(500.0,
+                  duration: Duration(milliseconds: 500),
+                  curve: Curves.ease);
+              },
+            ),
+            TextField(
+              controller: _descriptionController,
+              decoration: InputDecoration(
+                hintText: 'Description',
+              ),
+              onTap: (){
+                //120만큼 500milSec 동안 뷰를 올려줌
+                _scrollController.animateTo(500.0,
+                    duration: Duration(milliseconds: 500),
+                    curve: Curves.ease);
+              },
+            ),
           ],
-        )
+        ),
       ),
       resizeToAvoidBottomInset: false,
     );
