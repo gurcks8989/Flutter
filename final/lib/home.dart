@@ -21,7 +21,8 @@ import 'package:shrine/app.dart';
 import 'firebase_options.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final ApplicationLoginState loginState ;
+  const HomePage({Key? key, required this.loginState}) : super(key: key);
 
   // List<Card> _buildGridCards(BuildContext context) {
   //   if (hotels.isEmpty) {
@@ -123,7 +124,11 @@ class HomePage extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () => Navigator.pushNamed(context, routeAddProduct),
+            onPressed: () => Navigator.pushNamed(
+              context,
+              routeAddProduct,
+              arguments: loginState,
+            ),
           ),
         ],
       ),

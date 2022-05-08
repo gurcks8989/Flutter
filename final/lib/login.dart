@@ -99,7 +99,10 @@ class _LoginPageState extends State<LoginPage> {
                       onTap: () async{
                         startGoogleLoginFlow()
                             .then((_){
-                              Navigator.pop(context) ;
+                              Navigator.popAndPushNamed(
+                                  context,
+                                  routeHome,
+                                  arguments: loginState,                            ) ;
                             })
                             .catchError((e) => print(e));
                       },

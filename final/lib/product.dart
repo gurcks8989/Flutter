@@ -12,25 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-enum Category {
-  all,
-  accessories,
-  clothing,
-  home,
-}
-
 class Product {
   const Product({
-    required this.category,
     required this.id,
-    required this.isFeatured,
+    required this.likeNum,
     required this.name,
     required this.price,
   });
 
-  final Category category;
   final int id;
-  final bool isFeatured;
+  final int likeNum;
   final String name;
   final int price;
 

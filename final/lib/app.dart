@@ -20,7 +20,7 @@ import 'home.dart';
 import 'login.dart';
 
 const routeLogin = '/login';
-const routeHome = '/';
+const routeHome = '/main';
 const routeAddProduct = '/addProduct';
 const routeDetail = '/detail';
 const routeProfile = '/profile';
@@ -39,7 +39,6 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'final',
-      home: const HomePage(),
       initialRoute: routeLogin,
       onGenerateRoute: _getRoute,
       theme: ThemeData(
@@ -59,15 +58,17 @@ class App extends StatelessWidget {
       case routeLogin:
         return MaterialPageRoute(builder: (_) => const LoginPage());
       case routeHome:
-        return MaterialPageRoute(builder: (_) => const HomePage());
+        return MaterialPageRoute(
+          builder: (context) {
+            return HomePage(loginState: settings.arguments! as ApplicationLoginState) ;
+          },
+        ) ;
       case routeAddProduct:
-        return MaterialPageRoute(builder: (_) => const AddProductPage());
-      // case routeFavorite:
-      //   return MaterialPageRoute(
-      //     builder: (context) {
-      //       return FavoritePage(hotels: settings.arguments! as List<Hotel>) ;
-      //     },
-      //   ) ;
+        return MaterialPageRoute(
+          builder: (context) {
+            return AddProductPage(loginState: settings.arguments! as ApplicationLoginState) ;
+          },
+        ) ;
       // case routeMyPage:
       //   return MaterialPageRoute(
       //     builder: (context) {

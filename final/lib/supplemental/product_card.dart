@@ -15,7 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../model/product.dart';
+import '../product.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard(

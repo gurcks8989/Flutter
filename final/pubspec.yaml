@@ -13,6 +13,7 @@ dependencies:
   firebase_auth: ^3.3.15
   firebase_core: ^1.15.0
   image_picker: ^0.8.5
+  flutter_keyboard_size: ^1.0.0+4
   intl: ^0.17.0
 
   cupertino_icons: ^1.0.3

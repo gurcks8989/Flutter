@@ -14,28 +14,25 @@
 
 import 'dart:io';
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shrine/app.dart';
+import 'package:shrine/product.dart';
 
 class AddProductPage extends StatefulWidget {
-  const AddProductPage({Key? key}) : super(key: key);
+  final ApplicationLoginState loginState ;
+  const AddProductPage({Key? key, required this.loginState}) : super(key: key);
 
   @override
   State<AddProductPage> createState() => _AddProductPageState();
 }
 
 class _AddProductPageState extends State<AddProductPage> {
+  ApplicationLoginState get loginState => widget.loginState;
 
-  PickedFile? _image;
-  Future getImageFromGallery() async {
-    // for gallery
-    var image = await ImagePicker.platform.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _image = image!;
-    });
-  }
   final _productNameController = TextEditingController();
   final _priceController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -51,6 +48,38 @@ class _AddProductPageState extends State<AddProductPage> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void upDownScroll(double size){
+    _scrollController.animateTo(size,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.ease
+    );
+  }
+
+  PickedFile? _image;
+  Future getImageFromGallery() async {
+    // for gallery
+    var image = await ImagePicker.platform.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _image = image!;
+    });
+  }
+
+  Future<DocumentReference> addProduct(Product product) {
+    if (loginState == ApplicationLoginState.loggedOut) {
+      throw Exception('Must be logged in');
+    }
+
+    return FirebaseFirestore.instance
+        .collection('product')
+        .add(<String, dynamic>{
+      'id': product.id,
+      'likeNum': product.likeNum,
+      'name': product.name,
+      'price': product.price,
+      'timestamp' : DateTime.now().millisecondsSinceEpoch,
+    });
   }
 
   @override
@@ -95,70 +124,79 @@ class _AddProductPageState extends State<AddProductPage> {
             onPressed: () {
               print('save') ;
               if(_image == null){
-
+                _image = Image.asset('assets/logo.png') as PickedFile? ;
               }
             },
           ),
         ],
       ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.only(bottom: 250),
         controller: _scrollController,
-        child: Column(
-          children: [
-            Container(
-              color: Colors.grey[300],
-              height: 300.0,
-              child:  _image == null
-              ? const Center(
-                  child: Icon(
-                    Icons.image_rounded,
-                    color: Colors.grey,
-                    size: 120,
+        scrollDirection: Axis.vertical,
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Column(
+            children: [
+              Container(
+                color: Colors.grey[300],
+                height: 300.0,
+                child:  _image == null
+                ? const Center(
+                    child: Icon(
+                      Icons.image_rounded,
+                      color: Colors.grey,
+                      size: 120,
+                    ),
+                  )
+                : Image.file(
+                    File(_image!.path),
+                    fit: BoxFit.fitWidth,
                   ),
-                )
-              : Image.file(
-                  File(_image!.path),
-                  fit: BoxFit.fitWidth,
+                ),
+              _boxContents,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 55.0),
+                child: TextField(
+                  controller : _productNameController,
+                  decoration: const InputDecoration(
+                    hintText: 'Product Name',
+                    hintStyle: TextStyle(
+                      color : Color(0xff255F99),
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  onTap:() => upDownScroll(5.0),
+                  onEditingComplete: () => upDownScroll(-5.0),
                 ),
               ),
-            _boxContents,
-            TextField(
-              controller : _productNameController,
-              decoration: InputDecoration(
-                hintText: 'Product Name',
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 55.0),
+                child: TextField(
+                  // style: TextStyle(color: Color(0xff486DAF)),
+                  controller : _priceController,
+                  decoration: const InputDecoration(
+                    hintText: 'Price',
+                    hintStyle: TextStyle(color : Color(0xff96A5B0)),
+                  ),
+                  onTap:() => upDownScroll(55.0),
+                  onEditingComplete: () => upDownScroll(-55.0),
+                ),
               ),
-              onTap: (){
-                //120만큼 500milSec 동안 뷰를 올려줌
-                _scrollController.animateTo(500.0,
-                    duration: Duration(milliseconds: 500),
-                    curve: Curves.ease);
-              },
-            ),
-            TextField(
-              controller : _priceController,
-              decoration: InputDecoration(
-                hintText: 'Price',
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 55.0),
+                child: TextField(
+                  controller: _descriptionController,
+                  decoration: const InputDecoration(
+                    hintText: 'Description',
+                    hintStyle: TextStyle(color : Color(0xff96A5B0)),
+                  ),
+                  onTap:() => upDownScroll(150.0),
+                  onEditingComplete: () => upDownScroll(-150.0),
+                ),
               ),
-              onTap: (){
-                //120만큼 500milSec 동안 뷰를 올려줌
-                _scrollController.animateTo(500.0,
-                  duration: Duration(milliseconds: 500),
-                  curve: Curves.ease);
-              },
-            ),
-            TextField(
-              controller: _descriptionController,
-              decoration: InputDecoration(
-                hintText: 'Description',
-              ),
-              onTap: (){
-                //120만큼 500milSec 동안 뷰를 올려줌
-                _scrollController.animateTo(500.0,
-                    duration: Duration(milliseconds: 500),
-                    curve: Curves.ease);
-              },
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       resizeToAvoidBottomInset: false,
