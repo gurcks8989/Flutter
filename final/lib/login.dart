@@ -14,7 +14,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 import 'app.dart';
+import 'applicationState.dart';
+import 'home.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -24,59 +27,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  ApplicationLoginState _loginState = ApplicationLoginState.loggedOut ;
-  ApplicationLoginState get loginState => _loginState;
-
-  Future<UserCredential> signInWithGoogle() async {
-    // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
-
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
-  }
-
-  Future<void> startGoogleLoginFlow() async {
-    _loginState = ApplicationLoginState.googleLogin;
-    UserCredential userCredential = await signInWithGoogle() ;
-    final user = userCredential.user;
-    if (user != null) {
-      for (final providerProfile in user.providerData) {
-        final provider = providerProfile.providerId;
-
-        final uid = providerProfile.uid;
-
-        final name = providerProfile.displayName;
-        final emailAddress = providerProfile.email;
-        final profilePhoto = providerProfile.photoURL;
-      }
-    }
-  }
-
-  Future startGuestLoginFlow() async {
-    _loginState = ApplicationLoginState.guestLogin;
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance.signInAnonymously();
-      User? user = userCredential.user;
-      return user;
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
-  }
-
-  void signOut() {
-    FirebaseAuth.instance.signOut();
-  }
-
   get borderRadius => BorderRadius.circular(3.0);
 
   @override
@@ -95,43 +45,45 @@ class _LoginPageState extends State<LoginPage> {
                   borderRadius: borderRadius,
                   child: Ink(
                     color: const Color(0xFFEC9E91),
-                    child: InkWell(
-                      onTap: () async{
-                        startGoogleLoginFlow()
-                            .then((_){
-                              Navigator.popAndPushNamed(
-                                  context,
-                                  routeHome,
-                                  arguments: loginState,                            ) ;
-                            })
-                            .catchError((e) => print(e));
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(0.0),
-                        height: 50.0,//MediaQuery.of(context).size.width * .08,
-                        child: Row(
-                          children: <Widget>[
-                            LayoutBuilder(builder: (context, constraints) {
-                              return Container(
-                                height: constraints.maxHeight,
-                                width: constraints.maxHeight,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFD35A56),
-                                  borderRadius: borderRadius,
+                    child: Consumer<ApplicationState>(
+                      builder: (context, appState, _) => InkWell(
+                        onTap: () async{
+                          appState.startGoogleLoginFlow()
+                              .then((_){
+                                Navigator.popAndPushNamed(
+                                    context,
+                                    routeHome
+                                ) ;
+                              })
+                              .catchError((e) => print(e));
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(0.0),
+                          height: 50.0,//MediaQuery.of(context).size.width * .08,
+                          child: Row(
+                            children: <Widget>[
+                              LayoutBuilder(builder: (context, constraints) {
+                                return Container(
+                                  height: constraints.maxHeight,
+                                  width: constraints.maxHeight,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFD35A56),
+                                    borderRadius: borderRadius,
+                                  ),
+                                  child: const Icon(
+                                    Icons.android,
+                                    color: Colors.white,
+                                  ),
+                                );
+                              }),
+                              const Expanded(
+                                child: ListTile(
+                                  title: Text('GOOGLE'),
+                                  textColor: Colors.white,
                                 ),
-                                child: const Icon(
-                                  Icons.android,
-                                  color: Colors.white,
-                                ),
-                              );
-                            }),
-                            const Expanded(
-                              child: ListTile(
-                                title: Text('GOOGLE'),
-                                textColor: Colors.white,
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -143,40 +95,45 @@ class _LoginPageState extends State<LoginPage> {
                   borderRadius: borderRadius,
                   child: Ink(
                     color: const Color(0xFFC4C4C4),
-                    child: InkWell(
-                      onTap: () {
-                        startGuestLoginFlow()
-                            .then((_){
-                          Navigator.pop(context) ;
-                        })
-                            .catchError((e) => print(e));
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(0.0),
-                        height: 50.0,//MediaQuery.of(context).size.width * .08,
-                        child: Row(
-                          children: <Widget>[
-                            LayoutBuilder(builder: (context, constraints) {
-                              return Container(
-                                height: constraints.maxHeight,
-                                width: constraints.maxHeight,
-                                decoration: BoxDecoration(
-                                  color: Colors.black,
-                                  borderRadius: borderRadius,
+                    child: Consumer<ApplicationState>(
+                      builder: (context, appState, _) => InkWell(
+                        onTap: () {
+                          appState.startGuestLoginFlow()
+                              .then((_){
+                            Navigator.popAndPushNamed(
+                              context,
+                              routeHome,
+                            ) ;
+                          })
+                              .catchError((e) => print(e));
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(0.0),
+                          height: 50.0,//MediaQuery.of(context).size.width * .08,
+                          child: Row(
+                            children: <Widget>[
+                              LayoutBuilder(builder: (context, constraints) {
+                                return Container(
+                                  height: constraints.maxHeight,
+                                  width: constraints.maxHeight,
+                                  decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: borderRadius,
+                                  ),
+                                  child: const Icon(
+                                    Icons.question_mark,
+                                    color: Colors.white,
+                                  ),
+                                );
+                              }),
+                              const Expanded(
+                                child: ListTile(
+                                  title: Text('Guest'),
+                                  textColor: Colors.white,
                                 ),
-                                child: const Icon(
-                                  Icons.question_mark,
-                                  color: Colors.white,
-                                ),
-                              );
-                            }),
-                            const Expanded(
-                              child: ListTile(
-                                title: Text('Guest'),
-                                textColor: Colors.white,
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),

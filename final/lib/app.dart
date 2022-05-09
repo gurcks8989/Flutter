@@ -16,13 +16,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'addProduct.dart';
+import 'detail.dart';
 import 'home.dart';
 import 'login.dart';
+import 'product.dart';
 
 const routeLogin = '/login';
 const routeHome = '/main';
 const routeAddProduct = '/addProduct';
 const routeDetail = '/detail';
+const routeEditProduct = '/edit' ;
 const routeProfile = '/profile';
 
 enum ApplicationLoginState {
@@ -58,17 +61,22 @@ class App extends StatelessWidget {
       case routeLogin:
         return MaterialPageRoute(builder: (_) => const LoginPage());
       case routeHome:
-        return MaterialPageRoute(
-          builder: (context) {
-            return HomePage(loginState: settings.arguments! as ApplicationLoginState) ;
-          },
-        ) ;
+        return MaterialPageRoute(builder: (_) => const HomePage());
       case routeAddProduct:
+        return MaterialPageRoute(builder: (_) => const AddProductPage());
+      case routeDetail:
         return MaterialPageRoute(
           builder: (context) {
-            return AddProductPage(loginState: settings.arguments! as ApplicationLoginState) ;
+            return DetailPage(product: settings.arguments! as ProductElement) ;
           },
         ) ;
+      case routeEditProduct:
+        return MaterialPageRoute(
+          builder: (context) {
+            return DetailPage(product: settings.arguments! as ProductElement) ;
+          },
+        ) ;
+        return MaterialPageRoute(builder: (_) => const AddProductPage());
       // case routeMyPage:
       //   return MaterialPageRoute(
       //     builder: (context) {

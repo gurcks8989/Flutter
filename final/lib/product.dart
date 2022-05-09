@@ -12,22 +12,181 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-class Product {
-  const Product({
+import 'dart:async';
+import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
+import 'app.dart';
+
+
+class ProductElement {
+  const ProductElement({
     required this.id,
     required this.likeNum,
     required this.name,
     required this.price,
+    required this.description,
+    required this.creationTime,
+    required this.path,
   });
 
-  final int id;
+  final String id;
   final int likeNum;
   final String name;
   final int price;
+  final String description;
+  final DateTime creationTime;
+  final String path;
+}
 
-  String get assetName => '$id-0.jpg';
-  String get assetPackage => 'shrine_images';
+class Product extends StatefulWidget{
+  const Product({
+    required this.addProduct,
+    required this.products,
+  });
+
+  final FutureOr<void> Function(String name, int price, String description, String path) addProduct;
+  final List<ProductElement> products;
 
   @override
-  String toString() => "$name (id=$id)";
+  _ProductState createState() => _ProductState();
+}
+
+class _ProductState extends State<Product> {
+  String userId = FirebaseAuth.instance.currentUser!.uid ;
+  String dropdownValue = 'ASC';
+
+  Card getProductCard(int i){
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 6.0),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0)
+      ),
+      elevation: 4.0,
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: [
+          AspectRatio(
+            aspectRatio: 15 / 10,
+            child: Hero(
+              tag: 'product-${widget.products[i].id}',
+              child: Image.file(
+                File(widget.products[i].path),
+                fit: BoxFit.fill,
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 6),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              widget.products[i].name,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 35),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              '\$ ${widget.products[i].price}',
+              textAlign: TextAlign.left,
+              style: const TextStyle(
+                fontSize: 11,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.zero,
+              alignment: Alignment.bottomRight,
+              width: 300,
+              height: 200,
+              margin: const EdgeInsets.only(right: 8.0, bottom: 5.0),
+              child: TextButton(
+                child: const Text('more'),
+                style: TextButton.styleFrom(
+                  minimumSize: Size.zero, // Set this
+                  padding: EdgeInsets.zero, // and this
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    routeDetail,
+                    arguments: widget.products[i],
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    ) ;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 30),
+          alignment: Alignment.center,
+          child: DropdownButton<String>(
+            value: dropdownValue,
+            icon: const Icon(Icons.arrow_drop_down),
+            elevation: 16,
+            style: const TextStyle(fontSize: 13, color: Colors.black),
+            underline: Container(
+              height: 0.5,
+              color: Colors.grey,
+            ),
+            onChanged: (String? newValue) {
+              setState(() {
+                dropdownValue = newValue!;
+              });
+            },
+            items: <String>['ASC', 'DESC']
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Expanded(
+          child: OrientationBuilder(
+            builder: (context, orientation) {
+              return GridView.count(
+                // Create a grid with 2 columns in portrait mode, or 3 columns in
+                // landscape mode.
+                crossAxisCount: orientation == Orientation.portrait ? 2 : 3,
+                // Generate 100 widgets that display their index in the List.
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                childAspectRatio: 8.0 / 9.0,
+                children: [
+                  if(dropdownValue == 'ASC')...[
+                    for(var i = 0 ; i < widget.products.length ; i++)...[
+                      getProductCard(i)
+                    ]
+                  ]
+                  else...[
+                    for(var i = widget.products.length -1 ; 0 <= i ; i--)...[
+                      getProductCard(i)
+                    ]
+                  ]
+                ]
+              );
+            },
+          ),
+        )
+      ],
+    );
+  }
 }

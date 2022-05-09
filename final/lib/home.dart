@@ -12,103 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'package:shrine/app.dart';
+import 'dart:async';
 
-import 'firebase_options.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'applicationState.dart';
+import 'product.dart';
+import 'app.dart';
 
 class HomePage extends StatelessWidget {
-  final ApplicationLoginState loginState ;
-  const HomePage({Key? key, required this.loginState}) : super(key: key);
-
-  // List<Card> _buildGridCards(BuildContext context) {
-  //   if (hotels.isEmpty) {
-  //     return const <Card>[];
-  //   }
-  //   final ThemeData theme = Theme.of(context);
-  //   return hotels.map((hotel) {
-  //     return Card(
-  //       margin: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 6.0),
-  //       shape: RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(10.0)
-  //       ),
-  //       elevation: 4.0,
-  //       clipBehavior: Clip.antiAlias,
-  //       child: Column(
-  //         children: [
-  //           AspectRatio(
-  //             aspectRatio: 15 / 10,
-  //             child: Hero(
-  //               tag: 'hotels-${hotel.id}',
-  //               child: Image.asset(
-  //                 'assets/hotels-${hotel.id}.jpg',
-  //                 fit: BoxFit.fill,
-  //               ),
-  //             ),
-  //           ),
-  //           const SizedBox(height: 6),
-  //           Row(
-  //             children: [
-  //               const SizedBox(width: 25.0),
-  //               if(hotel.star == 3) ... [_starIcon, _starIcon, _starIcon]
-  //               else if(hotel.star == 2) ... [_starIcon, _starIcon, _starOutlineIcon]
-  //               else if(hotel.star == 1) ... [_starIcon, _starOutlineIcon, _starOutlineIcon]
-  //                 else ... [_starOutlineIcon, _starOutlineIcon, _starOutlineIcon],
-  //             ],
-  //           ),
-  //           Row(
-  //             children: [
-  //               const SizedBox(width: 25.0),
-  //               Expanded(
-  //                 child: Text(
-  //                   hotel.name,
-  //                   style: theme.textTheme.titleSmall,
-  //                   maxLines: 1,
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //           Expanded(
-  //             child: Row(
-  //               children: [
-  //                 const SizedBox(width: 5.0),
-  //                 const Icon(Icons.location_on, color: Colors.blue, size: 15),
-  //                 const SizedBox(width: 5.0),
-  //                 Text(
-  //                   hotel.address,
-  //                   style: const TextStyle(fontSize: 8),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //           Container(
-  //             alignment: Alignment.bottomRight,
-  //             width: 300,
-  //             margin: const EdgeInsets.only(right: 5.0, bottom: 5.0),
-  //             child: TextButton(
-  //               child: const Text('more'),
-  //               style: TextButton.styleFrom(
-  //                 minimumSize: Size.zero, // Set this
-  //                 padding: EdgeInsets.zero, // and this
-  //                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-  //               ),
-  //               onPressed: () {
-  //                 Navigator.pushNamed(
-  //                   context,
-  //                   routeDetail,
-  //                   arguments: hotel,
-  //                 );
-  //               },
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     );
-  //   }).toList();
-  // }
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -127,13 +40,16 @@ class HomePage extends StatelessWidget {
             onPressed: () => Navigator.pushNamed(
               context,
               routeAddProduct,
-              arguments: loginState,
             ),
           ),
         ],
       ),
-      body: Center(
-        child: Text('You did it!'),
+      body: Consumer<ApplicationState>(
+        builder: (context, appState, _) => Product(
+          addProduct: (name, price, description, path) =>
+              appState.addProduct(name, price, description, path),
+          products: appState.productList,
+        ),
       ),
       resizeToAvoidBottomInset: false,
     );
