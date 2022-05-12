@@ -29,131 +29,143 @@ class DetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final NumberFormat formatter = NumberFormat.simpleCurrency(
+        locale: Localizations.localeOf(context).toString(),
+        decimalDigits: 0
+    );
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey,
         title: const Text('Detail'),
         centerTitle: true,
         actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.create),
-            onPressed: () => Navigator.pushNamed(
-              context,
-              routeEditProduct,
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () => Navigator.pushNamed(
-              context,
-              routeAddProduct,
-            ),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Hero(
-            tag: 'product-${product.id}',
-            child: Material(
-              child: InkWell(
-                child: Image.file(
-                  File(product.path),
-                  width: 600,
-                  height: 300,
-                  fit: BoxFit.cover,
-                ),
-                onDoubleTap: (){
-                  // setState(() {
-                  //   widget.hotel.isFavorite = !widget.hotel.isFavorite ;
-                  // });
-                },
-              ),
-            ),
-          ),
-          const SizedBox(height: 70.0),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 55, vertical: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  product.name,
-                  style: const TextStyle(
-                    color : Color(0xff255F99),
-                    fontWeight: FontWeight.w900,
-                    fontSize: 15,
+          Consumer<ApplicationState>(
+            builder: (context, appState, _) => ButtonBar(
+              children : [
+                IconButton(
+                  icon: const Icon(Icons.create),
+                  onPressed: () => Navigator.pushNamed(
+                    context,
+                    routeEditProduct,
+                    arguments: product,
                   ),
                 ),
-                ButtonBar(
-                  children: [
-                    IconButton(
-                      onPressed: (){
-                        ScaffoldMessenger
-                            .of(context)
-                            .showSnackBar(
-                            const SnackBar(content: Text('I LIKE IT !'))
-                        );
-                        // const SnackBar(content: Text('You can only do it once !!'))
-
-                        // setState(() {
-                        //   widget.hotel.isFavorite = !widget.hotel.isFavorite ;
-                        // });
-                      },
-                      icon: const Icon(
-                        Icons.thumb_up,
-                        color: Colors.red,
-                      ),
-                    ),
-                    const Text(
-                      '1',
-                      style: TextStyle(
-                        fontSize: 23,
-                        fontWeight: FontWeight.w300,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ],
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () => {
+                    Navigator.pop(context),
+                    appState.deleteProductInServer(product.docId),
+                  }
                 ),
               ],
             ),
           ),
-          Container(
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.symmetric(horizontal: 55, vertical: 10),
-            child: Text(
-              '\$ ${product.price}',
-              style: const TextStyle(
-                color : Color(0xff96A5D1),
-                fontSize: 20,
-              )
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 55.0),
-            child: Divider(color: Colors.grey),
-          ),
-          Container(
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.symmetric(horizontal: 55, vertical: 10),
-            child: Text(
-              product.description,
-              softWrap: true,
-              style: const TextStyle(
-                color : Color(0xff96A5D1),
-                fontSize: 15,
+
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Hero(
+              tag: 'product-${product.docId}',
+              child: Material(
+                child: InkWell(
+                  child: Image.file(
+                    File(product.path),
+                    width: 600,
+                    height: 300,
+                    fit: BoxFit.cover,
+                  ),
+                  onDoubleTap: (){
+                    // setState(() {
+                    //   widget.hotel.isFavorite = !widget.hotel.isFavorite ;
+                    // });
+                  },
+                ),
               ),
             ),
-          ),
-          Expanded(
-            child: Container(
-              height: 200,
+            const SizedBox(height: 70.0),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 55),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    product.name,
+                    style: const TextStyle(
+                      color : Color(0xff255F99),
+                      fontWeight: FontWeight.w900,
+                      fontSize: 16,
+                    ),
+                  ),
+                  ButtonBar(buttonPadding: EdgeInsets.zero,
+                    children: [
+                      IconButton(
+                        onPressed: (){
+                          ScaffoldMessenger
+                              .of(context)
+                              .showSnackBar(
+                              const SnackBar(content: Text('I LIKE IT !'))
+                          );
+                          // const SnackBar(content: Text('You can only do it once !!'))
+
+                          // setState(() {
+                          //   widget.hotel.isFavorite = !widget.hotel.isFavorite ;
+                          // });
+                        },
+                        icon: const Icon(
+                          Icons.thumb_up,
+                          color: Colors.red,
+                        ),
+                      ),
+                      const Text(
+                        '1',
+                        style: TextStyle(
+                          fontSize: 23,
+                          fontWeight: FontWeight.w300,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.symmetric(horizontal: 55, vertical: 10),
+              child: Text(
+                '${formatter.format(product.price)}',
+                style: const TextStyle(
+                  color : Color(0xff96A5D1),
+                  fontSize: 20,
+                )
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 55.0),
+              child: Divider(color: Colors.grey),
+            ),
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.symmetric(horizontal: 55, vertical: 10),
+              child: Text(
+                product.description,
+                softWrap: true,
+                style: const TextStyle(
+                  color : Color(0xff96A5D1),
+                  fontSize: 15,
+                ),
+              ),
+            ),
+            Container(
+              height: 130,
               alignment: Alignment.bottomLeft,
               padding: const EdgeInsets.symmetric(horizontal: 55, vertical: 15),
               child: Text(
-                'creator : <>\n'
-                '${dateFormate.format(product.creationTime)} Created\n'
-                'Modified',
+                'creator : <${product.userId}>\n'
+                '${product.creationTime} Created\n'
+                '${product.updateTime} Modified',
                 softWrap: true,
                 style: const TextStyle(
                   color: Colors.grey,
@@ -161,8 +173,8 @@ class DetailPage extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       // Container(
       //   padding: const EdgeInsets.all(10.0),

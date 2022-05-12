@@ -44,14 +44,25 @@ class ApplicationState extends ChangeNotifier {
             .listen((snapshot) {
           _productList = [];
           for (final document in snapshot.docs) {
+            // if(document.data()['creationTimestamp'] == null){
+            //   FirebaseFirestore.instance
+            //       .collection('product')
+            //       .doc(document.id)
+            //       .update({
+            //     'creationTimestamp': FieldValue.serverTimestamp(),
+            //     'updateTimestamp': FieldValue.serverTimestamp(),
+            //   }) ;
+            // }
             _productList.add(
               ProductElement(
-                id: document.id,
+                docId: document.id,
+                userId: document.data()['uid'] as String,
                 likeNum: document.data()['likeNum'] as int,
                 name: document.data()['name'] as String,
                 price: document.data()['price'] as int,
                 description: document.data()['description'] as String,
-                creationTime: DateTime.fromMillisecondsSinceEpoch(document.data()['timestamp'] as int),
+                creationTime: document.data()['creationTimestamp'],
+                updateTime: document.data()[''],
                 path: document.data()['path'] as String,
               ),
             );
@@ -142,8 +153,31 @@ class ApplicationState extends ChangeNotifier {
       'price': price,
       'description': description,
       'path': path,
-      'timestamp' : DateTime.now().millisecondsSinceEpoch,
+      'timestamp' : FieldValue.serverTimestamp(),
+      'updateTimestamp' : FieldValue.serverTimestamp(),
     });
+  }
+
+  Future<void> editProduct(String docId, String name, int price, String description, String path) {
+    if (loginState == ApplicationLoginState.loggedOut) {
+      throw Exception('Must be logged in');
+    }
+
+    return FirebaseFirestore.instance
+        .collection('product')
+        .doc(docId)
+        .update({
+      'name': name,
+      'price': price,
+      'description': description,
+      'path': path,
+      'updateTimestamp' : FieldValue.serverTimestamp(),
+    });
+  }
+
+  Future<void> deleteProductInServer(String docId) async {
+    FirebaseFirestore.instance.collection('product').doc(docId).delete();
+    notifyListeners();
   }
 }
 

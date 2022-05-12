@@ -26,25 +26,28 @@ import 'package:shrine/product.dart';
 
 import 'applicationState.dart';
 
-class AddProductPage extends StatefulWidget {
-  const AddProductPage({Key? key}) : super(key: key);
+class EditProductPage extends StatefulWidget {
+  final ProductElement product ;
+  const EditProductPage({Key? key, required this.product}) : super(key: key);
 
   @override
-  State<AddProductPage> createState() => _AddProductPageState();
+  State<EditProductPage> createState() => _EditProductPageState();
 }
 
-class _AddProductPageState extends State<AddProductPage> {
-  final _productNameController = TextEditingController();
-  final _priceController = TextEditingController();
-  final _descriptionController = TextEditingController();
+class _EditProductPageState extends State<EditProductPage> {
+  late TextEditingController _productNameController ;
+  late TextEditingController _priceController ;
+  late TextEditingController _descriptionController ;
   late ScrollController _scrollController;
   late String defaultImage ;
 
   @override
   void initState() {
     print('init') ;
+    _productNameController = TextEditingController(text: widget.product.name);
+    _priceController = TextEditingController(text: widget.product.price.toString());
+    _descriptionController = TextEditingController(text: widget.product.description);
     _scrollController = ScrollController();
-    getDefaultImage() ;
     super.initState();
   }
 
@@ -73,16 +76,6 @@ class _AddProductPageState extends State<AddProductPage> {
     });
   }
 
-  Future<String> getDefaultImage() {
-    return FirebaseFirestore.instance
-        .collection('initialize')
-        .doc('productDefaultImage')
-        .get().then(
-          (doc) => defaultImage = doc['logo'] as String,
-      onError: (e) => print("Error completing: $e"),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
 
@@ -103,7 +96,7 @@ class _AddProductPageState extends State<AddProductPage> {
         ),
         leadingWidth: 70,
         centerTitle: true,
-        title: const Text('Add'),
+        title: const Text('Edit'),
         actions: <Widget>[
           Consumer<ApplicationState>(
             builder: (context, appState, _) => TextButton(
@@ -114,11 +107,18 @@ class _AddProductPageState extends State<AddProductPage> {
                 ),
               ),
               onPressed: () {
-                print(appState.loginState);
-                _image == null
-                ? appState.addProduct(_productNameController.text, int.parse(_priceController.text), _descriptionController.text, defaultImage)
-                : appState.addProduct(_productNameController.text, int.parse(_priceController.text), _descriptionController.text, _image!.path)
-                .then((value) => Navigator.pop(context)) ;
+                appState.editProduct(
+                    widget.product.docId,
+                    _productNameController.text,
+                    int.parse(_priceController.text),
+                    _descriptionController.text,
+                    _image == null
+                    ? widget.product.path
+                    : _image!.path)
+                .then((value) => {
+                  Navigator.pop(context),
+                  Navigator.pop(context),
+                }) ;
               },
             ),
           ),
@@ -136,16 +136,17 @@ class _AddProductPageState extends State<AddProductPage> {
                 color: Colors.grey[300],
                 height: 300.0,
                 child: _image == null
-                ? const Center(
-                    child: Icon(
-                      Icons.image_rounded,
-                      color: Colors.grey,
-                      size: 120,
-                    ),
-                  )
+                ? Image.file(
+                  File(widget.product.path),
+                  width: 600,
+                  height: 300,
+                  fit: BoxFit.cover,
+                )
                 : Image.file(
                   File(_image!.path),
-                  fit: BoxFit.fitWidth,
+                  width: 600,
+                  height: 300,
+                  fit: BoxFit.cover,
                 ),
               ),
               ButtonBar(
@@ -180,10 +181,14 @@ class _AddProductPageState extends State<AddProductPage> {
                   // style: TextStyle(color: Color(0xff486DAF)),
                   controller : _priceController,
                   decoration: const InputDecoration(
+                    prefixText: '\$ ',
                     hintText: 'Price',
                     hintStyle: TextStyle(color : Color(0xff96A5D1)),
                   ),
-                  style: const TextStyle(color : Color(0xff96A5D1)),
+                  style: const TextStyle(
+                    color : Color(0xff96A5D1),
+                    fontSize: 20,
+                  ),
                   onTap:() => upDownScroll(55.0),
                   onEditingComplete: () => upDownScroll(-55.0),
                 ),

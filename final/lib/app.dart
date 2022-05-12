@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 
 import 'addProduct.dart';
 import 'detail.dart';
+import 'editProduct.dart';
 import 'home.dart';
 import 'login.dart';
 import 'product.dart';
@@ -73,7 +74,7 @@ class App extends StatelessWidget {
       case routeEditProduct:
         return MaterialPageRoute(
           builder: (context) {
-            return DetailPage(product: settings.arguments! as ProductElement) ;
+            return EditProductPage(product: settings.arguments! as ProductElement) ;
           },
         ) ;
         return MaterialPageRoute(builder: (_) => const AddProductPage());

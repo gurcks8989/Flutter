@@ -48,6 +48,9 @@ class HomePage extends StatelessWidget {
         builder: (context, appState, _) => Product(
           addProduct: (name, price, description, path) =>
               appState.addProduct(name, price, description, path),
+          editProduct: (docId, name, price, description, path) =>
+              appState.editProduct(docId, name, price, description, path),
+          deleteProductInServer: (docId) => appState.deleteProductInServer(docId),
           products: appState.productList,
         ),
       ),

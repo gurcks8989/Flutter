@@ -145,7 +145,9 @@ class _AddProductPageState extends State<AddProductPage> {
                   )
                 : Image.file(
                   File(_image!.path),
-                  fit: BoxFit.fitWidth,
+                  width: 600,
+                  height: 300,
+                  fit: BoxFit.cover,
                 ),
               ),
               ButtonBar(
@@ -180,10 +182,14 @@ class _AddProductPageState extends State<AddProductPage> {
                   // style: TextStyle(color: Color(0xff486DAF)),
                   controller : _priceController,
                   decoration: const InputDecoration(
+                    prefixText: '\$ ',
                     hintText: 'Price',
                     hintStyle: TextStyle(color : Color(0xff96A5D1)),
                   ),
-                  style: const TextStyle(color : Color(0xff96A5D1)),
+                  style: const TextStyle(
+                    color : Color(0xff96A5D1),
+                    fontSize: 20,
+                  ),
                   onTap:() => upDownScroll(55.0),
                   onEditingComplete: () => upDownScroll(-55.0),
                 ),

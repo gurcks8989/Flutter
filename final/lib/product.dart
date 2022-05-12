@@ -14,29 +14,35 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'app.dart';
 
 
 class ProductElement {
   const ProductElement({
-    required this.id,
+    required this.docId,
+    required this.userId,
     required this.likeNum,
     required this.name,
     required this.price,
     required this.description,
     required this.creationTime,
+    required this.updateTime,
     required this.path,
   });
 
-  final String id;
+  final String docId;
+  final String userId;
   final int likeNum;
   final String name;
   final int price;
   final String description;
-  final DateTime creationTime;
+  final FieldValue creationTime;
+  final FieldValue updateTime;
   final String path;
 }
 
@@ -44,9 +50,13 @@ class Product extends StatefulWidget{
   const Product({
     required this.addProduct,
     required this.products,
+    required this.editProduct,
+    required this.deleteProductInServer,
   });
 
   final FutureOr<void> Function(String name, int price, String description, String path) addProduct;
+  final FutureOr<void> Function(String docId, String name, int price, String description, String path) editProduct;
+  final FutureOr<void> Function(String docId) deleteProductInServer;
   final List<ProductElement> products;
 
   @override
@@ -58,6 +68,10 @@ class _ProductState extends State<Product> {
   String dropdownValue = 'ASC';
 
   Card getProductCard(int i){
+    final NumberFormat formatter = NumberFormat.simpleCurrency(
+      locale: Localizations.localeOf(context).toString(),
+      decimalDigits: 0
+    );
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 6.0),
       shape: RoundedRectangleBorder(
@@ -70,7 +84,7 @@ class _ProductState extends State<Product> {
           AspectRatio(
             aspectRatio: 15 / 10,
             child: Hero(
-              tag: 'product-${widget.products[i].id}',
+              tag: 'product-${widget.products[i].docId}',
               child: Image.file(
                 File(widget.products[i].path),
                 fit: BoxFit.fill,
@@ -92,7 +106,8 @@ class _ProductState extends State<Product> {
             padding: const EdgeInsets.symmetric(horizontal: 35),
             alignment: Alignment.centerLeft,
             child: Text(
-              '\$ ${widget.products[i].price}',
+              formatter.format(widget.products[i].price),
+              // '\$ ${widget.products[i].price}',
               textAlign: TextAlign.left,
               style: const TextStyle(
                 fontSize: 11,
@@ -134,7 +149,7 @@ class _ProductState extends State<Product> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(vertical: 30),
+          padding: const EdgeInsets.symmetric(vertical: 10),
           alignment: Alignment.center,
           child: DropdownButton<String>(
             value: dropdownValue,
