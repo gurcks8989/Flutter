@@ -41,8 +41,8 @@ class ProductElement {
   final String name;
   final int price;
   final String description;
-  final FieldValue creationTime;
-  final FieldValue updateTime;
+  final Timestamp creationTime;
+  final Timestamp updateTime;
   final String path;
 }
 
@@ -52,11 +52,17 @@ class Product extends StatefulWidget{
     required this.products,
     required this.editProduct,
     required this.deleteProductInServer,
+    required this.alreadyLikeCheck,
+    required this.increaseLike,
+    required this.getCurrentUserId,
   });
 
   final FutureOr<void> Function(String name, int price, String description, String path) addProduct;
   final FutureOr<void> Function(String docId, String name, int price, String description, String path) editProduct;
   final FutureOr<void> Function(String docId) deleteProductInServer;
+  final FutureOr<void> Function(String docId) alreadyLikeCheck;
+  final FutureOr<void> Function(String docId) increaseLike;
+  final FutureOr<void> Function() getCurrentUserId;
   final List<ProductElement> products;
 
   @override

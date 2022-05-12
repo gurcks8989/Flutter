@@ -35,16 +35,17 @@ class AddProductPage extends StatefulWidget {
 
 class _AddProductPageState extends State<AddProductPage> {
   final _productNameController = TextEditingController();
-  final _priceController = TextEditingController();
+  final _priceController = TextEditingController(text: '0');
   final _descriptionController = TextEditingController();
   late ScrollController _scrollController;
   late String defaultImage ;
 
   @override
   void initState() {
-    print('init') ;
     _scrollController = ScrollController();
-    getDefaultImage() ;
+    ApplicationState()
+        .getDefaultImage()
+        .then((path) => defaultImage = path) ;
     super.initState();
   }
 
@@ -71,16 +72,6 @@ class _AddProductPageState extends State<AddProductPage> {
     setState(() {
       _image = image!;
     });
-  }
-
-  Future<String> getDefaultImage() {
-    return FirebaseFirestore.instance
-        .collection('initialize')
-        .doc('productDefaultImage')
-        .get().then(
-          (doc) => defaultImage = doc['logo'] as String,
-      onError: (e) => print("Error completing: $e"),
-    );
   }
 
   @override
@@ -114,10 +105,15 @@ class _AddProductPageState extends State<AddProductPage> {
                 ),
               ),
               onPressed: () {
-                print(appState.loginState);
-                _image == null
-                ? appState.addProduct(_productNameController.text, int.parse(_priceController.text), _descriptionController.text, defaultImage)
-                : appState.addProduct(_productNameController.text, int.parse(_priceController.text), _descriptionController.text, _image!.path)
+                appState.addProduct(
+                    _productNameController.text,
+                    int.parse(_priceController.text),
+                    _descriptionController.text,
+
+                    _image == null
+                    ? defaultImage
+                    : _image!.path
+                )
                 .then((value) => Navigator.pop(context)) ;
               },
             ),

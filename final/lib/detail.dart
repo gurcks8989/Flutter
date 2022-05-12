@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:async';
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -33,6 +33,8 @@ class DetailPage extends StatelessWidget {
         locale: Localizations.localeOf(context).toString(),
         decimalDigits: 0
     );
+    var isExist = 0 ;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey,
@@ -42,22 +44,25 @@ class DetailPage extends StatelessWidget {
           Consumer<ApplicationState>(
             builder: (context, appState, _) => ButtonBar(
               children : [
-                IconButton(
-                  icon: const Icon(Icons.create),
-                  onPressed: () => Navigator.pushNamed(
-                    context,
-                    routeEditProduct,
-                    arguments: product,
+                if(product.userId == appState.getCurrentUserId())...[
+                  IconButton(
+                    icon: const Icon(Icons.create),
+                    onPressed: () => Navigator.pushNamed(
+                      context,
+                      routeEditProduct,
+                      arguments: product,
+                    ),
                   ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () => {
-                    Navigator.pop(context),
-                    appState.deleteProductInServer(product.docId),
-                  }
-                ),
-              ],
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () => {
+                      Navigator.pop(context),
+                      appState.deleteProductInServer(product.docId),
+                    }
+                  ),
+                ]
+                else...[Container()]
+              ]
             ),
           ),
 
@@ -76,11 +81,6 @@ class DetailPage extends StatelessWidget {
                     height: 300,
                     fit: BoxFit.cover,
                   ),
-                  onDoubleTap: (){
-                    // setState(() {
-                    //   widget.hotel.isFavorite = !widget.hotel.isFavorite ;
-                    // });
-                  },
                 ),
               ),
             ),
@@ -98,35 +98,42 @@ class DetailPage extends StatelessWidget {
                       fontSize: 16,
                     ),
                   ),
-                  ButtonBar(buttonPadding: EdgeInsets.zero,
-                    children: [
-                      IconButton(
-                        onPressed: (){
-                          ScaffoldMessenger
-                              .of(context)
-                              .showSnackBar(
-                              const SnackBar(content: Text('I LIKE IT !'))
-                          );
-                          // const SnackBar(content: Text('You can only do it once !!'))
-
-                          // setState(() {
-                          //   widget.hotel.isFavorite = !widget.hotel.isFavorite ;
-                          // });
+                  Consumer<ApplicationState>(
+                    builder: (context, appState, _) => ButtonBar(
+                      buttonPadding: EdgeInsets.zero,
+                      children: [
+                        IconButton(
+                          onPressed: (){
+                            appState.alreadyLikeCheck(product.docId)
+                              .then((value) => value != 0
+                              ? ScaffoldMessenger
+                                .of(context)
+                                .showSnackBar(const SnackBar(content: Text('You can only do it once !!')))
+                              : {
+                                ScaffoldMessenger
+                                .of(context)
+                                .showSnackBar(
+                                const SnackBar(content: Text('I LIKE IT !'))),
+                                appState.increaseLike(product.docId),
+                                isExist = 1,
+                              }
+                            );
                         },
                         icon: const Icon(
                           Icons.thumb_up,
                           color: Colors.red,
                         ),
                       ),
-                      const Text(
-                        '1',
-                        style: TextStyle(
+                      Text(
+                        '${product.likeNum + isExist}',
+                        style: const TextStyle(
                           fontSize: 23,
                           fontWeight: FontWeight.w300,
                           color: Colors.red,
                         ),
                       ),
                     ],
+                  ),
                   ),
                 ],
               ),
@@ -135,7 +142,7 @@ class DetailPage extends StatelessWidget {
               alignment: Alignment.centerLeft,
               padding: const EdgeInsets.symmetric(horizontal: 55, vertical: 10),
               child: Text(
-                '${formatter.format(product.price)}',
+                formatter.format(product.price),
                 style: const TextStyle(
                   color : Color(0xff96A5D1),
                   fontSize: 20,
@@ -164,8 +171,8 @@ class DetailPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 55, vertical: 15),
               child: Text(
                 'creator : <${product.userId}>\n'
-                '${product.creationTime} Created\n'
-                '${product.updateTime} Modified',
+                '${dateFormate.format(product.creationTime.toDate())} Created\n'
+                '${dateFormate.format(product.updateTime.toDate())} Modified',
                 softWrap: true,
                 style: const TextStyle(
                   color: Colors.grey,

@@ -43,7 +43,6 @@ class _EditProductPageState extends State<EditProductPage> {
 
   @override
   void initState() {
-    print('init') ;
     _productNameController = TextEditingController(text: widget.product.name);
     _priceController = TextEditingController(text: widget.product.price.toString());
     _descriptionController = TextEditingController(text: widget.product.description);

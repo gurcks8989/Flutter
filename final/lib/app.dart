@@ -14,6 +14,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shrine/profile.dart';
 
 import 'addProduct.dart';
 import 'detail.dart';
@@ -77,13 +78,8 @@ class App extends StatelessWidget {
             return EditProductPage(product: settings.arguments! as ProductElement) ;
           },
         ) ;
-        return MaterialPageRoute(builder: (_) => const AddProductPage());
-      // case routeMyPage:
-      //   return MaterialPageRoute(
-      //     builder: (context) {
-      //       return MyPage(hotels: settings.arguments! as List<Hotel>) ;
-      //     },
-      //   ) ;
+      case routeProfile:
+        return MaterialPageRoute(builder: (_) => const ProfilePage());
       default :
         return MaterialPageRoute(
           builder: (_) => Scaffold(

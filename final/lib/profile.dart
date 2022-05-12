@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,26 +21,19 @@ import 'applicationState.dart';
 import 'product.dart';
 import 'app.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey,
-        leading: IconButton(
-          icon: const Icon(Icons.person),
-          onPressed: () => Navigator.pushNamed(
-              context,
-              routeProfile
-          ),
-        ),
+        backgroundColor: Colors.black,
         centerTitle: true,
-        title: const Text('Main'),
+        title: const Text('profile'),
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.add),
+            icon: const Icon(Icons.exit_to_app),
             onPressed: () => Navigator.pushNamed(
               context,
               routeAddProduct,
@@ -48,19 +42,53 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: Consumer<ApplicationState>(
-        builder: (context, appState, _) => Product(
-          addProduct: (name, price, description, path) =>
-              appState.addProduct(name, price, description, path),
-          editProduct: (docId, name, price, description, path) =>
-              appState.editProduct(docId, name, price, description, path),
-          deleteProductInServer: (docId) => appState.deleteProductInServer(docId),
-          alreadyLikeCheck: (docId) => appState.alreadyLikeCheck(docId),
-          increaseLike: (docId) => appState.increaseLike(docId),
-          getCurrentUserId : () => appState.getCurrentUserId(),
-          products: appState.productList,
+        builder: (context, appState, _) => User(
+          user: appState.user,
         ),
       ),
       resizeToAvoidBottomInset: false,
+    );
+  }
+}
+
+class UserElement {
+  String path = '' ;
+  String userId = '' ;
+  String email = '' ;
+
+  UserElement(){
+    path = '' ;
+    userId = '' ;
+    email = '' ;
+  }
+}
+
+class User extends StatefulWidget{
+  const User({
+    required this.user,
+  });
+  final UserElement user;
+
+  @override
+  _UserState createState() => _UserState();
+}
+
+class _UserState extends State<User> {
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children:[
+        AspectRatio(
+          aspectRatio: 15 / 10,
+            child: Image.file(
+            File(widget.user.path),
+            fit: BoxFit.fill,
+          ),
+        ),
+        const SizedBox(height: 8),
+      ],
     );
   }
 }
