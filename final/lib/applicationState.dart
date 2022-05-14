@@ -22,6 +22,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:shrine/app.dart';
 import 'package:shrine/profile.dart';
+import 'package:shrine/assignUser.dart';
 
 import 'firebase_options.dart';
 import 'product.dart';
@@ -34,48 +35,69 @@ class ApplicationState extends ChangeNotifier {
   Future<void> init() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
-    );
+    ).then((value) => {
+      FirebaseAuth.instance.userChanges().listen((user) {
+        if (user != null) {
+          FirebaseFirestore.instance
+              .collection('product')
+              .orderBy('price')
+              .snapshots()
+              .listen((snapshot) {
+            _productList = [];
+            for (final document in snapshot.docs) {
+              _productList.add(
+                ProductElement(
+                  docId: document.id,
+                  userId: document.data()['userId'] as String,
+                  likeNum: document.data()['likeNum'] as int,
+                  name: document.data()['name'] as String,
+                  price: document.data()['price'] as int,
+                  description: document.data()['description'] as String,
+                  creationTime: document.data()['creationTimestamp'] as Timestamp,
+                  updateTime: document.data()['updateTimestamp'] as Timestamp,
+                  path: document.data()['path'] as String,
+                ),
+              );
+            }
+            notifyListeners();
+          });
 
-    FirebaseAuth.instance.userChanges().listen((user) {
-      if (user != null) {
-        _productListSubscription = FirebaseFirestore.instance
-            .collection('product')
-            .orderBy('price')
-            .snapshots()
-            .listen((snapshot) {
+          FirebaseFirestore.instance
+              .collection('user')
+              .doc(user.uid)
+              .get()
+              .then((document) => {
+                loginState == ApplicationLoginState.googleLogin ?
+                _userElement = UserElement(
+                    userId: document.data()!['uid']! as String,
+                    name: document.data()!['name']! as String,
+                    email: document.data()!['email']! as String,
+                    statusMessage: document.data()!['status_message']! as String,
+                    path: document.data()!['path']! as String
+                ) :
+                _userElement = UserElement(
+                    userId: document.data()!['uid']! as String,
+                    name: 'Hyeokchan, Kwon',
+                    email: 'Anonymous',
+                    statusMessage: document.data()!['status_message']! as String,
+                    path: 'http://handong.edu/site/handong/res/img/logo.png',
+                )
+          }) ;
+        } else {
+          _loginState = ApplicationLoginState.loggedOut;
+          _userElement = UserElement.reset() ;
           _productList = [];
-          for (final document in snapshot.docs) {
-            _productList.add(
-              ProductElement(
-                docId: document.id,
-                userId: document.data()['userId'] as String,
-                likeNum: document.data()['likeNum'] as int,
-                name: document.data()['name'] as String,
-                price: document.data()['price'] as int,
-                description: document.data()['description'] as String,
-                creationTime: document.data()['creationTimestamp'] as Timestamp,
-                updateTime: document.data()['updateTimestamp'] as Timestamp,
-                path: document.data()['path'] as String,
-              ),
-            );
-          }
-          notifyListeners();
-        });
-      } else {
-        _loginState = ApplicationLoginState.loggedOut;
-        _user = UserElement() ;
-        _productList = [];
-        _productListSubscription?.cancel();
-        signOut();
-      }
-      notifyListeners();
-    });
+          signOut();
+        }
+        notifyListeners();
+      })
+    }) ;
   }
 
   ApplicationLoginState _loginState = ApplicationLoginState.loggedOut;
   ApplicationLoginState get loginState => _loginState;
-  UserElement _user = UserElement();
-  UserElement get user => _user;
+  UserElement _userElement = UserElement.reset() ;
+  UserElement get userElement => _userElement;
 
   Future<UserCredential> signInWithGoogle() async {
     _loginState = ApplicationLoginState.googleLogin;
@@ -101,9 +123,15 @@ class ApplicationState extends ChangeNotifier {
     UserCredential userCredential = await signInWithGoogle();
     final user = userCredential.user;
     if (user != null) {
-      _user.userId = user.providerData[0].uid!;
-      _user.email = user.providerData[0].email!;
-      _user.path = user.providerData[0].photoURL!;
+      alreadyExistUser().then((value) => {
+        if(value == 0)
+          addUserFromGoogle(
+              user.providerData[0].displayName,
+              user.providerData[0].email,
+              user.providerData[0].photoURL
+          )
+        }
+      ) ;
     }
   }
 
@@ -112,25 +140,16 @@ class ApplicationState extends ChangeNotifier {
     UserCredential userCredential = await FirebaseAuth.instance.signInAnonymously();
     final user = userCredential.user;
     if (user != null) {
-        _user.userId = user.uid!;
-        _user.email = 'Anonymous' ;
-        getDefaultImage()
-            .then((value) => _user.path = value) ;
+      addUserFromGuest() ;
     }
   }
 
-  Future signOut() async {
-    try {
-      print('sign out complete');
-      return await FirebaseAuth.instance.signOut();
-    } catch (e) {
-      print('sign out failed');
-      print(e.toString());
-      return null;
+  void signOut() {
+    if(Firebase.apps.isNotEmpty && FirebaseAuth.instance.currentUser != null) {
+      FirebaseAuth.instance.signOut();
     }
   }
 
-  StreamSubscription<QuerySnapshot>? _productListSubscription;
   List<ProductElement> _productList = [];
   List<ProductElement> get productList => _productList;
 
@@ -154,8 +173,7 @@ class ApplicationState extends ChangeNotifier {
     });
   }
 
-  Future<void> editProduct(String docId, String name, int price,
-      String description, String path) {
+  Future<void> editProduct(String docId, String name, int price, String description, String path) {
     if (loginState == ApplicationLoginState.loggedOut) {
       throw Exception('Must be logged in');
     }
@@ -234,5 +252,67 @@ class ApplicationState extends ChangeNotifier {
           (doc) => doc['logo'] as String,
       onError: (e) => print("Error completing: $e"),
     );
+  }
+
+  Future<int> alreadyExistUser() {
+    if (loginState == ApplicationLoginState.loggedOut) {
+      throw Exception('Must be logged in');
+    }
+
+    return FirebaseFirestore.instance
+      .collection('user')
+      .where(FirebaseAuth.instance.currentUser!.uid)
+      .get()
+      .then((value) => value.size) ;
+  }
+
+  Future<void> addUserFromGoogle(String? name, String? email, String? path) {
+    if (loginState == ApplicationLoginState.loggedOut) {
+      throw Exception('Must be logged in');
+    }
+    return FirebaseFirestore.instance
+        .collection('user')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .set({
+      'name': name,
+      'email': email,
+      'uid': FirebaseAuth.instance.currentUser!.uid,
+      'status_message': 'I promise to take the test honestly before GOD .',
+      'path': path,
+    });
+  }
+
+  Future<void> addUserFromGuest() {
+    if (loginState == ApplicationLoginState.loggedOut) {
+      throw Exception('Must be logged in');
+    }
+
+    return FirebaseFirestore.instance
+        .collection('user')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .set({
+      'uid': FirebaseAuth.instance.currentUser!.uid,
+      'status_message': 'I promise to take the test honestly before GOD .',
+    });
+  }
+
+  bool editProfile = false ;
+
+  void onEdit() {
+    editProfile = !editProfile ;
+    notifyListeners();
+  }
+
+  Future<void> editStatusMessage(String statusMessage) {
+    if (loginState == ApplicationLoginState.loggedOut) {
+      throw Exception('Must be logged in');
+    }
+
+    return FirebaseFirestore.instance
+        .collection('user')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update({
+      'status_message': statusMessage,
+    });
   }
 }

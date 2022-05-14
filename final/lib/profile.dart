@@ -17,6 +17,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shrine/assignUser.dart';
 import 'applicationState.dart';
 import 'product.dart';
 import 'app.dart';
@@ -32,63 +33,27 @@ class ProfilePage extends StatelessWidget {
         centerTitle: true,
         title: const Text('profile'),
         actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.exit_to_app),
-            onPressed: () => Navigator.pushNamed(
-              context,
-              routeAddProduct,
+          Consumer<ApplicationState>(
+            builder: (context, appState, _) =>
+            IconButton(
+              icon: const Icon(Icons.exit_to_app),
+              onPressed: () => {
+                Navigator.pop(context),
+                Navigator.popAndPushNamed(
+                  context,
+                  routeLogin,
+                ),
+                appState.signOut(),
+              }
             ),
           ),
         ],
       ),
       body: Consumer<ApplicationState>(
-        builder: (context, appState, _) => User(
-          user: appState.user,
-        ),
+        builder: (context, appState, _) =>
+          AssignUser(assignUser: appState.userElement)
       ),
       resizeToAvoidBottomInset: false,
-    );
-  }
-}
-
-class UserElement {
-  String path = '' ;
-  String userId = '' ;
-  String email = '' ;
-
-  UserElement(){
-    path = '' ;
-    userId = '' ;
-    email = '' ;
-  }
-}
-
-class User extends StatefulWidget{
-  const User({
-    required this.user,
-  });
-  final UserElement user;
-
-  @override
-  _UserState createState() => _UserState();
-}
-
-class _UserState extends State<User> {
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children:[
-        AspectRatio(
-          aspectRatio: 15 / 10,
-            child: Image.file(
-            File(widget.user.path),
-            fit: BoxFit.fill,
-          ),
-        ),
-        const SizedBox(height: 8),
-      ],
     );
   }
 }

@@ -134,14 +134,9 @@ class _EditProductPageState extends State<EditProductPage> {
               Container(
                 color: Colors.grey[300],
                 height: 300.0,
-                child: _image == null
-                ? Image.file(
-                  File(widget.product.path),
-                  width: 600,
-                  height: 300,
-                  fit: BoxFit.cover,
-                )
-                : Image.file(
+                child: Image.file(
+                  _image == null ?
+                  File(widget.product.path) :
                   File(_image!.path),
                   width: 600,
                   height: 300,

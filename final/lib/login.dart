@@ -30,6 +30,12 @@ class _LoginPageState extends State<LoginPage> {
   get borderRadius => BorderRadius.circular(3.0);
 
   @override
+  void initState() {
+    ApplicationState().signOut() ;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
