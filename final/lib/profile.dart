@@ -30,8 +30,6 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        centerTitle: true,
-        title: const Text('profile'),
         actions: <Widget>[
           Consumer<ApplicationState>(
             builder: (context, appState, _) =>
@@ -42,8 +40,7 @@ class ProfilePage extends StatelessWidget {
                 Navigator.popAndPushNamed(
                   context,
                   routeLogin,
-                ),
-                appState.signOut(),
+                ).then((value) => appState.signOut()),
               }
             ),
           ),

@@ -36,7 +36,12 @@ class HomePage extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        title: const Text('Main'),
+        title: Consumer<ApplicationState>(
+          builder: (context, appState, _) => LoginProvider(
+            state: appState.loginState == ApplicationLoginState.googleLogin,
+            name: appState.userElement.name
+          )
+        ),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.add),
@@ -47,20 +52,42 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: Consumer<ApplicationState>(
-        builder: (context, appState, _) => Product(
-          addProduct: (name, price, description, path) =>
-              appState.addProduct(name, price, description, path),
-          editProduct: (docId, name, price, description, path) =>
-              appState.editProduct(docId, name, price, description, path),
-          deleteProductInServer: (docId) => appState.deleteProductInServer(docId),
-          alreadyLikeCheck: (docId) => appState.alreadyLikeCheck(docId),
-          increaseLike: (docId) => appState.increaseLike(docId),
-          getCurrentUserId : () => appState.getCurrentUserId(),
-          products: appState.productList,
-        ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Consumer<ApplicationState>(
+              builder: (context, appState, _) => Product(
+                addProduct: (name, price, description, path) =>
+                    appState.addProduct(name, price, description, path),
+                editProduct: (docId, name, price, description, path) =>
+                    appState.editProduct(docId, name, price, description, path),
+                deleteProductInServer: (docId) => appState.deleteProductInServer(docId),
+                alreadyLikeCheck: (docId) => appState.alreadyLikeCheck(docId),
+                increaseLike: (docId) => appState.increaseLike(docId),
+                getCurrentUserId : () => appState.getCurrentUserId(),
+                products: appState.productList,
+              ),
+            ),
+          ),
+        ],
       ),
       resizeToAvoidBottomInset: false,
     );
+  }
+}
+
+class LoginProvider extends StatelessWidget {
+  const LoginProvider({required this.state, required this.name});
+  final bool state;
+  final String name ;
+
+  @override
+  Widget build(BuildContext context) {
+    return
+      Text(
+        state ?
+        'Welcome ' + name + '!' :
+        'Welcome Guest!'
+      ) ;
   }
 }

@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
 import 'SplashScreen.dart';
-import 'LoginPage.dart';
+import 'loginPage.dart';
 import 'SignUpPage.dart';
 import 'MainPage.dart';
 import 'UserInterface.dart';
+import 'loginPage.dart';
 
 class CommonThings {
   static double _width = 0;
@@ -44,7 +45,7 @@ class CommonThings {
 
 void main() => runApp(MyApp());
 
-CommonThings common = new CommonThings();
+CommonThings common = CommonThings();
 
 class MyApp extends StatelessWidget {
   @override
@@ -53,7 +54,7 @@ class MyApp extends StatelessWidget {
       initialRoute: common.getAddress(),
       routes: {
         "/": (context) => SplashScreen(),
-        "/login": (context) => LoginPage(),
+        "/login": (context) => const LoginPage(),
         "/main": (context) => MainPage(),
         "/signUp": (context) => SignUpPage(),
       },

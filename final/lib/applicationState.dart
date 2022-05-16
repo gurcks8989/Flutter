@@ -82,7 +82,8 @@ class ApplicationState extends ChangeNotifier {
                     statusMessage: document.data()!['status_message']! as String,
                     path: 'http://handong.edu/site/handong/res/img/logo.png',
                 )
-          }) ;
+          }).then((value) =>
+              notifyListeners()) ;
         } else {
           _loginState = ApplicationLoginState.loggedOut;
           _userElement = UserElement.reset() ;
@@ -296,6 +297,13 @@ class ApplicationState extends ChangeNotifier {
     });
   }
 
+  bool order = true ;
+
+  void changingOrder() {
+    order = !order ;
+    notifyListeners();
+  }
+
   bool editProfile = false ;
 
   void onEdit() {
@@ -308,11 +316,21 @@ class ApplicationState extends ChangeNotifier {
       throw Exception('Must be logged in');
     }
 
+    print(statusMessage) ;
     return FirebaseFirestore.instance
         .collection('user')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .update({
       'status_message': statusMessage,
+    }).then((value) =>{
+      _userElement = UserElement(
+        userId: _userElement.userId,
+        name: _userElement.name,
+        email: _userElement.email,
+        statusMessage: statusMessage,
+        path: _userElement.path
+      ),
+      notifyListeners()
     });
   }
 }

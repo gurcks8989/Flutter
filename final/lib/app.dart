@@ -81,12 +81,7 @@ class App extends StatelessWidget {
       case routeProfile:
         return MaterialPageRoute(builder: (_) => const ProfilePage());
       default :
-        return MaterialPageRoute(
-          builder: (_) => Scaffold(
-            body: Center(
-                child: Text('No route defined for ${settings.name}')),
-          )
-        );
+        return MaterialPageRoute(builder: (_) => const LoginPage());
     }
   }
 }

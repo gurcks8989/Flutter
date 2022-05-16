@@ -42,67 +42,75 @@ class AssignUser extends StatefulWidget{
 }
 
 class _AssignUserState extends State<AssignUser> {
+  final ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
 
     return SingleChildScrollView(
-      child: Container(
-        color: Colors.black,
-        padding: const EdgeInsets.symmetric(horizontal: 90.0, vertical: 45),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            AspectRatio(
-              aspectRatio: 1,
-              child: Container(
-                color: Colors.white,
-                child: Image.network(
-                  widget.assignUser.path,
-                  fit: BoxFit.fitWidth,
+      controller: _scrollController,
+      scrollDirection: Axis.vertical,
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Container(
+          color: Colors.black,
+          padding: const EdgeInsets.only(left: 90.0, right: 90, bottom: 300),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AspectRatio(
+                aspectRatio: 1,
+                child: Container(
+                  color: Colors.white,
+                  child: Image.network(
+                    widget.assignUser.path,
+                    fit: BoxFit.fitWidth,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 80),
-            Text(
-              '<${widget.assignUser.userId}>',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 20,
+              const SizedBox(height: 80),
+              Text(
+                '<${widget.assignUser.userId}>',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
               ),
-            ),
-            const Divider(
-              height: 30,
-              thickness: 1,
-              color: Colors.white,
-            ),
-            const SizedBox(height: 20),
-            Text(
-              widget.assignUser.email,
-              style: const TextStyle(
+              const Divider(
+                height: 30,
+                thickness: 1,
                 color: Colors.white,
-                fontSize: 13,
               ),
-            ),
-            const SizedBox(height: 30),
-            Text(
-              widget.assignUser.name,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
+              const SizedBox(height: 20),
+              Text(
+                widget.assignUser.email,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            Consumer<ApplicationState>(
-              builder: (context, appState, _) => EditStatusMessage(
-                state: appState.editProfile,
-                statusMessage: widget.assignUser.statusMessage,
-                onEdit: appState.onEdit,
-                editStatusMessage: (statusMessage) => appState.editStatusMessage(statusMessage),
-                statusMessageController: TextEditingController(text: widget.assignUser.statusMessage),
-              )
-            ),
-          ],
+              const SizedBox(height: 30),
+              Text(
+                widget.assignUser.name,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Consumer<ApplicationState>(
+                builder: (context, appState, _) => EditStatusMessage(
+                  state: appState.editProfile,
+                  statusMessage: widget.assignUser.statusMessage,
+                  onEdit: appState.onEdit,
+                  editStatusMessage: (statusMessage) => appState.editStatusMessage(statusMessage),
+                  statusMessageController: TextEditingController(text: widget.assignUser.statusMessage),
+                  scrollController: _scrollController,
+                )
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -110,12 +118,20 @@ class _AssignUserState extends State<AssignUser> {
 }
 
 class EditStatusMessage extends StatelessWidget {
-  const EditStatusMessage({required this.state, required this.statusMessage, required this.onEdit, required this.editStatusMessage, required this.statusMessageController});
+  const EditStatusMessage({required this.state, required this.statusMessage, required this.onEdit, required this.editStatusMessage, required this.statusMessageController, required this.scrollController});
   final bool state;
   final String statusMessage ;
   final void Function() onEdit;
-  final FutureOr<void> Function() editStatusMessage;
+  final FutureOr<void> Function(String statusMessage) editStatusMessage;
   final TextEditingController statusMessageController;
+  final ScrollController scrollController;
+
+  void upDownScroll(double size){
+    scrollController.animateTo(size,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.ease
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -132,6 +148,8 @@ class EditStatusMessage extends StatelessWidget {
           ),
           minLines: 1,
           maxLines: 5,
+          onTap: () => upDownScroll(200),
+          onEditingComplete: () => upDownScroll(-200),
         ),
         ButtonBar(
           buttonPadding: EdgeInsets.zero,
@@ -140,6 +158,8 @@ class EditStatusMessage extends StatelessWidget {
             TextButton(
               onPressed: () => {
                 onEdit(),
+                upDownScroll(-200),
+                editStatusMessage(statusMessageController.text),
               },
               child: const Text('save'),
             ),
@@ -166,7 +186,9 @@ class EditStatusMessage extends StatelessWidget {
           alignment: MainAxisAlignment.start,
           children: [
             TextButton(
-              onPressed: () => onEdit(),
+              onPressed: () => {
+                onEdit()
+              },
               child: const Text('edit'),
             ),
           ],
