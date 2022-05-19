@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'loginPage.dart';
+import 'login/login.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -67,7 +67,7 @@ class MyApp2 extends StatelessWidget {
                   onPressed: () {
                     // 눌렀을 때 두 번째 route로 이동합니다.
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => login_page()));
+                        MaterialPageRoute(builder: (context) => LoginPage()));
                   },
                   textColor: Colors.black,
                 ),

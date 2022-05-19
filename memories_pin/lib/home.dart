@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'Map.dart';
-import 'Search.dart';
-import 'Add.dart';
-import 'Gallery.dart';
-import 'UserInterface.dart';
+import 'map.dart';
+import 'search.dart';
+import 'app.dart';
+import 'add.dart';
+import 'gallery.dart';
+import 'userInterface.dart';
 import 'main.dart';
 
-class MainPage extends StatefulWidget {
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
-    return _MainPageState();
+    return _HomePageState();
   }
 }
 
-class _MainPageState extends State<MainPage> {
+class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   final List<Widget> _children = [
     Map(),
@@ -32,7 +35,6 @@ class _MainPageState extends State<MainPage> {
         type: BottomNavigationBarType.fixed,
         unselectedItemColor: Colors.black,
         selectedItemColor: Colors.black,
-        iconSize: common.getWidth() / 10,
         onTap: (index) {
           setState(() {
             _currentIndex = index;

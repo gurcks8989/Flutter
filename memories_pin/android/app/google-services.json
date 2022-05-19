@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "154050321552",
+    "project_id": "memories-pin",
+    "storage_bucket": "memories-pin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:154050321552:android:9af7ac3989e79677de0c15",
+        "android_client_info": {
+          "package_name": "com.pin.memories_pin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "154050321552-fm1f4lqpkddsos4vnt87q9bk32lrhla7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9dmO9W6AQSV3C-0pXdQZgRVIp0vGEiQg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "154050321552-fm1f4lqpkddsos4vnt87q9bk32lrhla7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "154050321552-9ag5g5rvsrhd4280r3ggfcf5p94no6i3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.pin.memoriesPin"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

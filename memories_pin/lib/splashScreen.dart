@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'app.dart';
 import 'main.dart';
 
 class Init {
@@ -86,12 +87,8 @@ class SplashScreen extends StatelessWidget {
 
     void showRelevant() async {
       await Future.delayed(Duration(seconds: 1));
-      Navigator.pushReplacementNamed(context, common.getAddress()); //  '/login'
+      Navigator.pushReplacementNamed(context, routeLogin); //  '/login'
     }
-
-    common.setSize(MediaQuery.of(context).size);
-    print('Width of the screen: ${common.getWidth()}');
-    print('current address ' + common.getAddress());
 
     return MaterialApp(
       home: Scaffold(
@@ -108,7 +105,6 @@ class SplashScreen extends StatelessWidget {
                     return loadSection;
                   }
                   else {
-                    common.setAddress("/login");
                     showRelevant();
                     return chargingSection;
                   }

@@ -30,7 +30,7 @@ class UserInterface extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center, //세로 방향으로 가운데 정렬하기
         children: [
           FlatButton(
-            minWidth: common.getWidth() / 4,
+            minWidth: 200 / 4,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -54,7 +54,7 @@ class UserInterface extends StatelessWidget {
           Container(width: 1, height: 80, color: Colors.black),
           //),
           FlatButton(
-            minWidth: common.getWidth() / 4,
+            minWidth: 200 / 4,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -89,7 +89,7 @@ class UserInterface extends StatelessWidget {
           ),
           Container(width: 1, height: 80, color: Colors.black),
           FlatButton(
-            minWidth: common.getWidth() / 4,
+            minWidth: 200 / 4,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -253,8 +253,7 @@ class modifiedUser extends StatelessWidget {
               children: [
                 TableRow(children: [
                   Padding(
-                    padding:
-                        EdgeInsets.only(top: common.getHeight() / 40),
+                    padding: EdgeInsets.only(top: 200 / 40),
                     child: Text(
                       '이메일',
                       textAlign: TextAlign.center,
@@ -267,7 +266,7 @@ class modifiedUser extends StatelessWidget {
                   TextFormField(
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(
-                        bottom: common.getHeight() / 40,
+                        bottom: 200 / 40,
                       ),
                     ),
                   ),
@@ -275,7 +274,7 @@ class modifiedUser extends StatelessWidget {
                 TableRow(children: [
                   Padding(
                     padding:
-                        EdgeInsets.only(top: common.getHeight() / 40),
+                        EdgeInsets.only(top: 200 / 40),
                     child: Text(
                       '닉네임',
                       textAlign: TextAlign.center,
@@ -288,7 +287,7 @@ class modifiedUser extends StatelessWidget {
                   TextFormField(
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.only(
-                        bottom: common.getHeight() / 40,
+                        bottom: 200 / 40,
                       ),
                     ),
                   ),
