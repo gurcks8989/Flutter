@@ -14,7 +14,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'home.dart';
+import 'home/home.dart';
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -22,9 +22,9 @@ import 'package:flutter/foundation.dart';
 
 import 'splashScreen.dart';
 import 'login/login.dart';
-import 'signUpPage.dart';
-import 'home.dart';
-import 'userInterface.dart';
+import 'home/signUpPage.dart';
+import 'home/home.dart';
+import 'home/userInterface.dart';
 import 'login/login.dart';
 
 const routeLogin = '/login';
@@ -37,7 +37,9 @@ const routeProfile = '/profile';
 enum ApplicationLoginState {
   loggedOut,
   login,
-  signUp,
+  email,
+  password,
+  register,
   googleLogin,
   guestLogin,
 }
@@ -67,9 +69,7 @@ class App extends StatelessWidget {
   Route<dynamic>? _getRoute(RouteSettings settings) {
     switch(settings.name){
       case routeLogin:
-        return PageRouteBuilder(
-          transitionDuration: const Duration(seconds: 20),
-          pageBuilder: (_, __, ___) => const LoginPage()) ;
+        return MaterialPageRoute(builder: (_) => const LoginPage());
       case routeHome:
         return MaterialPageRoute(builder: (_) => const HomePage());
       // case routeDetail:

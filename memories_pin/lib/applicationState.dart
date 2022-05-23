@@ -18,23 +18,27 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
 import 'app.dart';
+import 'assignUser.dart';
 import 'firebase_options.dart';
+import 'userElement.dart';
 
 class ApplicationState extends ChangeNotifier {
   ApplicationState() {
     init();
+    signOut();
   }
 
   Future<void> init() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
-    ) ;//.then((value) => {
-      // FirebaseAuth.instance.userChanges().listen((user) {
-        // if (user != null) {
+    ).then((value) => {
+      FirebaseAuth.instance.userChanges().listen((user) {
+        if (user != null) {
         //   FirebaseFirestore.instance
         //       .collection('product')
         //       .orderBy('price')
@@ -81,21 +85,20 @@ class ApplicationState extends ChangeNotifier {
         //         )
         //   }).then((value) =>
         //       notifyListeners()) ;
-    //     } else {
-    //       _loginState = ApplicationLoginState.loggedOut;
-    //       _userElement = UserElement.reset() ;
+        } else {
+          _loginState = ApplicationLoginState.loggedOut;
+          _userElement = UserElement.reset() ;
     //       _productList = [];
-    //       signOut();
-    //     }
-    //     notifyListeners();
-    //   })
-    // }) ;
+        }
+        notifyListeners();
+      })
+    }) ;
   }
 
   ApplicationLoginState _loginState = ApplicationLoginState.loggedOut;
   ApplicationLoginState get loginState => _loginState;
-  // UserElement _userElement = UserElement.reset() ;
-  // UserElement get userElement => _userElement;
+  UserElement _userElement = UserElement.reset() ;
+  UserElement get userElement => _userElement;
 
   void startLoginFlow() {
     _loginState = ApplicationLoginState.login;
@@ -103,13 +106,52 @@ class ApplicationState extends ChangeNotifier {
   }
 
   void startSignUpFlow() {
-    _loginState = ApplicationLoginState.signUp;
+    _loginState = ApplicationLoginState.register;
     notifyListeners();
   }
 
   void cancelLoginFlow() {
     _loginState = ApplicationLoginState.loggedOut;
     notifyListeners();
+  }
+
+
+  Future<bool> verifyEmail(String email) async {
+    try{
+      var methods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+      return methods.contains('password');
+    }
+    on FirebaseAuthException catch (e) {
+      return false ;
+    }
+  }
+
+  Future<void> registerAccount(
+      String email,
+      String name,
+      String password,
+      void Function(FirebaseAuthException e) errorCallback) async {
+    try {
+      var credential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+      final user = credential.user;
+      await user!.updateDisplayName(name);
+      addUser(name, email, '') ;
+    } on FirebaseAuthException catch (e) {
+      errorCallback(e);
+    }
+  }
+
+  Future<int> signInWithEmailAndPassword(String email, String password) async {
+    try{
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+      final user = userCredential.user ;
+      return 1 ;
+    } on FirebaseAuthException catch (error) {
+      // if(error.code == "ERROR_WRONG_PASSWORD") {
+      return 2 ;
+    }
   }
 
   Future<UserCredential> signInWithGoogle() async {
@@ -138,22 +180,13 @@ class ApplicationState extends ChangeNotifier {
     if (user != null) {
       alreadyExistUser().then((value) => {
         if(value == 0)
-          addUserFromGoogle(
+          addUser(
               user.providerData[0].displayName,
               user.providerData[0].email,
               user.providerData[0].photoURL
           )
         }
       ) ;
-    }
-  }
-
-  Future<void> startGuestLoginFlow() async {
-    _loginState = ApplicationLoginState.guestLogin;
-    UserCredential userCredential = await FirebaseAuth.instance.signInAnonymously();
-    final user = userCredential.user;
-    if (user != null) {
-      addUserFromGuest() ;
     }
   }
 
@@ -279,7 +312,7 @@ class ApplicationState extends ChangeNotifier {
       .then((value) => value.size) ;
   }
 
-  Future<void> addUserFromGoogle(String? name, String? email, String? path) {
+  Future<void> addUser(String? name, String? email, String? path) {
     if (loginState == ApplicationLoginState.loggedOut) {
       throw Exception('Must be logged in');
     }
@@ -290,22 +323,8 @@ class ApplicationState extends ChangeNotifier {
       'name': name,
       'email': email,
       'uid': FirebaseAuth.instance.currentUser!.uid,
-      'status_message': 'I promise to take the test honestly before GOD .',
+      'status_message': '',
       'path': path,
-    });
-  }
-
-  Future<void> addUserFromGuest() {
-    if (loginState == ApplicationLoginState.loggedOut) {
-      throw Exception('Must be logged in');
-    }
-
-    return FirebaseFirestore.instance
-        .collection('user')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .set({
-      'uid': FirebaseAuth.instance.currentUser!.uid,
-      'status_message': 'I promise to take the test honestly before GOD .',
     });
   }
 
