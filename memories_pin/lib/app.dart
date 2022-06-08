@@ -22,10 +22,6 @@ import 'package:flutter/foundation.dart';
 
 import 'splashScreen.dart';
 import 'login/login.dart';
-import 'home/signUpPage.dart';
-import 'home/home.dart';
-import 'home/userInterface.dart';
-import 'login/login.dart';
 
 const routeLogin = '/login';
 const routeHome = '/main';

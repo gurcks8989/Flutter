@@ -61,7 +61,7 @@ class MyApp2 extends StatelessWidget {
               ),
               Container(
                 alignment: Alignment(0.8, 0.0),
-                child: FlatButton(
+                child: MaterialButton(
                   child: Text('login 화면으로 가는 임시 버튼',
                       style: TextStyle(fontSize: 15)),
                   onPressed: () {

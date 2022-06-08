@@ -63,28 +63,20 @@ class ApplicationState extends ChangeNotifier {
         //     notifyListeners();
         //   });
         //
-        //   FirebaseFirestore.instance
-        //       .collection('user')
-        //       .doc(user.uid)
-        //       .get()
-        //       .then((document) => {
-        //         loginState == ApplicationLoginState.googleLogin ?
-        //         _userElement = UserElement(
-        //             userId: document.data()!['uid']! as String,
-        //             name: document.data()!['name']! as String,
-        //             email: document.data()!['email']! as String,
-        //             statusMessage: document.data()!['status_message']! as String,
-        //             path: document.data()!['path']! as String
-        //         ) :
-        //         _userElement = UserElement(
-        //             userId: document.data()!['uid']! as String,
-        //             name: 'Hyeokchan, Kwon',
-        //             email: 'Anonymous',
-        //             statusMessage: document.data()!['status_message']! as String,
-        //             path: 'http://handong.edu/site/handong/res/img/logo.png',
-        //         )
-        //   }).then((value) =>
-        //       notifyListeners()) ;
+          FirebaseFirestore.instance
+              .collection('user')
+              .doc(user.uid)
+              .get()
+              .then((document) => {
+            _userElement = UserElement(
+                userId: document.data()!['uid']! as String,
+                name: document.data()!['name']! as String,
+                email: document.data()!['email']! as String,
+                statusMessage: document.data()!['status_message']! as String,
+                path: document.data()!['path']! as String
+            ) ,
+          }).then((value) =>
+              notifyListeners()) ;
         } else {
           _loginState = ApplicationLoginState.loggedOut;
           _userElement = UserElement.reset() ;
@@ -341,7 +333,6 @@ class ApplicationState extends ChangeNotifier {
     editProfile = !editProfile ;
     notifyListeners();
   }
-
   //
   // Future<void> editStatusMessage(String statusMessage) {
   //   if (loginState == ApplicationLoginState.loggedOut) {
